@@ -5,7 +5,15 @@
   "projects": {
     "graduation-project-second": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -27,7 +35,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss",
+              "src/shared/styles/_variables.scss"
             ],
             "scripts": []
           },
@@ -85,12 +94,16 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss",
+              "src/shared/styles/_variables.scss"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "9bb4193d-64e7-4417-9ad3-c35e145d8cd9"
   }
 }
