@@ -1,0 +1,20 @@
+<img class="background-layout" src="images/login-page-background.png" alt="background">
+<main>
+  <app-auth-pages-header />
+  <div class="body">
+    <div class="info">
+      <h2 class="title">Login</h2>
+      <p class="description">Use your personal email to log in to Modish shop.</p>
+    </div>
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <app-custom-form-input formControlName="email" label="Email" type="text" />
+      <app-custom-form-input formControlName="password" label="Password" type="password" />
+      <button class="login-btn" sendButton>
+        Log in
+      </button>
+    </form>
+  </div>
+  <footer>
+    Don't have an account yet? <a class="navigate-to-register-btn" routerLink="/auth/register">Sign up</a>
+  </footer>
+</main>

@@ -1,0 +1,55 @@
+@use "../../../../shared/styles/variables" as *;
+:host{
+  background-color: #F8F9FA;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  .img-background{
+    width: 50%;
+  }
+
+  .form-container{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    height: 100%;
+
+    .container{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      background-color: white;
+      border-radius: 1rem;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+
+      form{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        h3{
+          color: #574964;
+        }
+      }
+
+      footer{
+        font-size: 0.875rem;
+
+        .navigate-link{
+          color: $main-color-1st;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

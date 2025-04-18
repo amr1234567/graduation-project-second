@@ -1,0 +1,30 @@
+<div class="logo-container">
+  <img class="logo" src="images/logo.png" alt="logo">
+  <h2 class="title">Modish</h2>
+</div>
+<ul class="links">
+  @for (link of navigationLinks(); track $index){
+    <li [class.active]="link.isActive">
+      <a [routerLink]="link.route">{{link.value}}</a>
+    </li>
+  }
+</ul>
+<div class="search-container">
+  <input class="search-input" #searchInput type="text" placeholder="Search">
+  <button class="searchBtn" (click)="search(searchInput.value)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g opacity="0.6">
+        <circle cx="11" cy="11" r="7" stroke="#323232" stroke-width="2"/>
+        <path d="M11 8C10.606 8 10.2159 8.0776 9.85195 8.22836C9.48797 8.37913 9.15726 8.6001 8.87868 8.87868C8.6001 9.15726 8.37913 9.48797 8.22836 9.85195C8.0776 10.2159 8 10.606 8 11" stroke="#323232" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 20L17 17" stroke="#323232" stroke-width="2" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </button>
+</div>
+<ul class="personal-icons">
+  @for (link of personalIcons(); track link.value){
+    <li [title]="link.value" [class.active]="link.isActive">
+      <a [routerLink]="link.route" [innerHTML]="sanitize(link.icon)"></a>
+    </li>
+  }
+</ul>

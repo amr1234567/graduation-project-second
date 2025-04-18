@@ -1,0 +1,18 @@
+<img class="img-background" src="images/sign-up-photo.png" alt="image">
+<div class="form-container">
+  <app-auth-pages-header />
+  <div class="container">
+    <form [formGroup]="signUpForm" class="sign-up-form" (ngSubmit)="submit()">
+      <h3>Sign Up</h3>
+      <app-custom-form-input formControlName="name" label="Name" type="text" />
+      <app-custom-form-input formControlName="email" label="Email" type="text" />
+      <app-custom-form-input formControlName="password" label="Password" type="password" />
+      <button sendButton class="submit-btn">
+        Sign up
+      </button>
+    </form>
+    <footer>
+      Already have an account? <a class="navigate-link" routerLink="/auth/login">Login now</a>
+    </footer>
+  </div>
+</div>
