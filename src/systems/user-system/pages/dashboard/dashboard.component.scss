@@ -1,0 +1,29 @@
+:host{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+
+  ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+    background-color: white;
+
+    li{
+      background-color: #9F8383;
+      border-radius: 1rem;
+      font-weight: bold;
+      transition: 0.15s ease-in-out;
+
+      &.active{
+        background-color: #836060;
+      }
+
+      &:hover:not(.active){
+        opacity: 0.7;
+      }
+    }
+  }
+}
