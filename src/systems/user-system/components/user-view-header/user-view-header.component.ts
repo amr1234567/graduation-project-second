@@ -2,12 +2,12 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {filter} from 'rxjs';
 import {DomSanitizer} from '@angular/platform-browser';
+import UserContext from '../../../../shared/contexts/user.context';
 
 @Component({
   selector: 'app-user-view-header',
   imports: [
-    RouterLink,
-    RouterLinkActive
+    RouterLink
   ],
   templateUrl: './user-view-header.component.html',
   styleUrl: './user-view-header.component.scss'
@@ -16,6 +16,11 @@ export class UserViewHeaderComponent implements OnInit{
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer)
+  private _userCtx = inject(UserContext);
+
+  get userRole(){
+    return this._userCtx.user()?.role ?? "User";
+  }
 
   ngOnInit(): void {
     // Set initial active link based on the current URL
@@ -27,16 +32,23 @@ export class UserViewHeaderComponent implements OnInit{
     ).subscribe((event: NavigationEnd) => {
       this.updateActiveLink(event.urlAfterRedirects);
     });
+
+    if(this.userRole === "Admin")
+      this.navigationLinks.update(v => [...v, {
+        value: "Dashboard",
+        isActive: false,
+        route: "/admin/dashboard"
+      }])
   }
 
-  navigationLinks = signal([
+  navigationLinks = signal<NavIconType[]>([
     {value: "Home", route: "/user/main", isActive: false},
     {value: "Category", route: "/user/products", isActive: false},
     {value: "Men", route:"/user/products", isActive: false},
     {value: "Women", route: "/user/products", isActive: false},
   ])
 
-  personalIcons = signal([
+  personalIcons = signal<NavPersonalIconType[]>([
     {
       value: "shop cart",
       route: "/user/cart",
@@ -89,4 +101,16 @@ export class UserViewHeaderComponent implements OnInit{
   sanitize(icon: string) {
     return this.sanitizer.bypassSecurityTrustHtml(icon);
   }
+}
+
+type NavPersonalIconType = {
+  value: string;
+  route: string;
+  icon: string;
+  isActive: boolean;
+}
+type NavIconType = {
+  value: string;
+  route: string;
+  isActive: boolean;
 }

@@ -22,29 +22,19 @@ export class SharedService {
   }
 
   protected sendPostRequest<TRes>(route: string, body: any, options?: HttpOptions): Observable<TRes | null> {
-    return this.httpClient.post<BaseApiResponse<TRes>>(`${this.baseUrl()}${route}`, JSON.stringify(body), options)
-      .pipe(mergeMap(d => {
-        if (d.statusCode === ApiStatusCode.OK) {
-          return of(d.data || null);
-        }
-        this.notificationCtx.addNotification(d.message, NotificationTypeEnum.Error);
-        return throwError(() => new Error(d.message));
-      }), catchError(e => {
-        this.notificationCtx.addNotification(JSON.stringify(e), NotificationTypeEnum.Error)
+    return this.httpClient.post<TRes>(`${this.baseUrl()}${route}`, JSON.stringify(body), options)
+      .pipe(catchError(e => {
+        this.notificationCtx.addNotification(JSON.stringify(e.message), NotificationTypeEnum.Error)
+        console.log(e);
         return throwError(e);
       }))
   }
 
   protected sendGetRequest<TRes>(route: string, options?: HttpOptions): Observable<TRes> {
-    return this.httpClient.get<BaseApiResponse<TRes>>(`${this.baseUrl()}${route}`, options)
-      .pipe(mergeMap(d => {
-        if (d.statusCode === ApiStatusCode.OK && !!d.data) {
-          return of(d.data);
-        }
-        this.notificationCtx.addNotification(d.message, NotificationTypeEnum.Error);
-        return throwError(() => new Error(d.message));
-      }), catchError(e => {
-        this.notificationCtx.addNotification(JSON.stringify(e), NotificationTypeEnum.Error)
+    return this.httpClient.get<TRes>(`${this.baseUrl()}${route}`, options)
+      .pipe(catchError(e => {
+        this.notificationCtx.addNotification(JSON.stringify(e.message), NotificationTypeEnum.Error)
+        console.log(e);
         return throwError(e);
       }))
   }

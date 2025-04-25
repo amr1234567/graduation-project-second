@@ -2,7 +2,7 @@ type NotificationModel = {
   id: number;
   message: string;
   type: NotificationTypeEnum;
-  isDeleting: boolean;
+  delay: number;
 }
 export enum NotificationTypeEnum {
   Warning = "warning",

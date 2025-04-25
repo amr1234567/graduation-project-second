@@ -3,13 +3,14 @@ import {AuthPagesHeaderComponent} from '../../components/auth-pages-header/auth-
 import {CustomFormInputComponent} from '../../../../shared/components/custom-form-input/custom-form-input.component';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SendButtonComponent} from '../../components/send-button/send-button.component';
-import {AuthService} from '../../services/auth.service';
+import {AuthService, RegisterRequest} from '../../services/auth.service';
 import {NotificationContext} from '../../../../shared/contexts/notification.context';
 import {Router, RouterLink} from '@angular/router';
 import {passwordComplexityValidator} from '../../validators/password-complexity.validator';
 import {switchMap, throwError} from 'rxjs';
 import {NotificationTypeEnum} from '../../../../shared/models/notification.model';
 import UserContext from '../../../../shared/contexts/user.context';
+import {confirmPasswordValidator} from '../../validators/confirm-password.validator';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -33,15 +34,22 @@ export class SignUpPageComponent {
   signUpForm = new FormGroup({
     name : new FormControl("", [Validators.required, Validators.minLength(3)]),
     email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", [Validators.required, Validators.minLength(8), passwordComplexityValidator])
-  });
+    password: new FormControl("", [Validators.required, Validators.minLength(8), passwordComplexityValidator]),
+    confirmPassword: new FormControl("", [Validators.required, Validators.minLength(8), passwordComplexityValidator])
+  }, { validators: confirmPasswordValidator });
 
   submit() {
     if (this.signUpForm.invalid){
       this.notificationCtx.addNotification("the from is invalid", NotificationTypeEnum.Error);
       return;
     }
-    const conn = this.authService.register(this.signUpForm.value.name!, this.signUpForm.value.email!, this.signUpForm.value.password!)
+    const params : RegisterRequest = {
+      email : this.signUpForm.value.email!,
+      password : this.signUpForm.value.password!,
+      name : this.signUpForm.value.name!,
+      confirmPassword : this.signUpForm.value.confirmPassword!,
+    }
+    const conn = this.authService.register(params)
       .pipe(switchMap(d => {
         if(d)
           return this.authService.login(this.signUpForm.value.email!, this.signUpForm.value.password!);

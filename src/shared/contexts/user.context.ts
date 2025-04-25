@@ -1,16 +1,28 @@
 import {Injectable, signal} from '@angular/core';
 import UserModel from '../models/user.model';
+import {LocalStorageService} from '../services/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export default class UserContext {
   private user$ = signal<UserModel | null>(null);
+  private _userKey = "E-Commerce_User";
 
-  public user = this.user$.asReadonly();
+  public get user() {
+    return this.user$.asReadonly();
+  }
 
   public changeUserDetails(user: UserModel | null): void {
     this.user$.set(user);
+    this.localStorageServices.saveObject(this._userKey, user);
+  }
+
+  constructor(private localStorageServices: LocalStorageService) {
+    const user = localStorageServices.getObject<UserModel>(this._userKey);
+    if (user) {
+      this.user$.set(user);
+    }
   }
 
 
@@ -20,12 +32,11 @@ export default class UserContext {
       return ['auth','login'];
     switch (user.role){
       case "User":
-        return ['user','main'];
+        return ['main' ,'user','main'];
       case "Admin":
-        return ['admin','main'];
+        return ['main', 'admin', 'dashboard','products'];
       default:
         return ['auth','login'];
     }
   }
-
 }

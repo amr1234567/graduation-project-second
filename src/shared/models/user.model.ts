@@ -1,8 +1,8 @@
 export default interface UserModel {
   token: string;
-  accessToken: string;
-  claims : {key: string, value: string}[];
   role : UserRoleType;
+  email: string;
+  userId: string;
 }
 
 export type UserRoleType = "User" | "Admin";
