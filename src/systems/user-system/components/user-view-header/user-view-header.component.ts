@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, ElementRef, HostListener, inject, OnInit, signal, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {filter} from 'rxjs';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -17,6 +17,12 @@ export class UserViewHeaderComponent implements OnInit{
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer)
   private _userCtx = inject(UserContext);
+
+  _user = this._userCtx.user();
+
+  @ViewChild('profileMenu', { read: ElementRef }) profileMenu!: ElementRef;
+  @ViewChild('profileButton', { read: ElementRef }) profileButton!: ElementRef;
+  profileMenuOpen = signal(false);
 
   get userRole(){
     return this._userCtx.user()?.role ?? "User";
@@ -42,10 +48,10 @@ export class UserViewHeaderComponent implements OnInit{
   }
 
   navigationLinks = signal<NavIconType[]>([
-    {value: "Home", route: "/user/main", isActive: false},
-    {value: "Category", route: "/user/products", isActive: false},
-    {value: "Men", route:"/user/products", isActive: false},
-    {value: "Women", route: "/user/products", isActive: false},
+    {value: "Home", route: "/main/user/main", isActive: false},
+    {value: "Category", route: "/main/user/products", isActive: false},
+    {value: "Men", route:"/main/user/products", isActive: false},
+    {value: "Women", route: "/main/user/products", isActive: false},
   ])
 
   personalIcons = signal<NavPersonalIconType[]>([
@@ -70,7 +76,7 @@ export class UserViewHeaderComponent implements OnInit{
     },
     {
       value: "profile page",
-      route: "/user/profile",
+      route: "/main/profile",
       icon: "<svg width=\"20\" height=\"24\" viewBox=\"0 0 20 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
         "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9.57018 15.7051C4.94779 15.7051 1 16.348 1 18.9244C1 21.5007 4.92374 22.1669 9.57018 22.1669C14.1938 22.1669 18.1404 21.5228 18.1404 18.9476C18.1404 16.3724 14.2178 15.7051 9.57018 15.7051Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n" +
         "<path opacity=\"0.4\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9.56999 12.0304C12.6039 12.0304 15.063 9.76724 15.063 6.97514C15.063 4.18304 12.6039 1.91992 9.56999 1.91992C6.5373 1.91992 4.07816 4.18304 4.07816 6.97514C4.06737 9.75728 6.50844 12.0204 9.53271 12.0304H9.56999Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n" +
@@ -78,6 +84,27 @@ export class UserViewHeaderComponent implements OnInit{
       isActive : false
     }
   ])
+
+  toggleProfileMenu(event: MouseEvent) {
+    event.stopPropagation();
+    this.profileMenuOpen.update(open => !open);
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(target: HTMLElement) {
+    if (this.profileMenuOpen() &&
+      this.profileMenu && this.profileButton &&
+      !this.profileMenu.nativeElement.contains(target) &&
+      !this.profileButton.nativeElement.contains(target)) {
+      this.profileMenuOpen.set(false);
+    }
+  }
+
+  logout() {
+    this._userCtx.changeUserDetails(null);
+    this.router.navigate(['auth', 'login']);
+  }
+
 
   private updateActiveLink(url: string): void {
     this.navigationLinks.update(links => {

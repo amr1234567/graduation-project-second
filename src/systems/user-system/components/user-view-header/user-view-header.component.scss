@@ -6,6 +6,7 @@
   padding: 0.2rem 1rem;
   justify-content: space-between;
   background-color: #F1F1F1;
+  position: relative;
 
   .logo-container{
     display: flex;
@@ -94,12 +95,44 @@
     }
   }
 
+  .logout-btn {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .profile-menu {
+    position: absolute;
+    top: 100%; right: 0;
+    width: fit-content;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    transform: translateY(-10px);
+    animation: slideDown 200ms ease-out forwards;
+  }
+
   .personal-icons{
     display: flex;
     align-items: center;
     gap: 2rem;
     list-style: none;
     margin-right: 2rem;
+    position: relative;
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+
 
     li{
       cursor: pointer;
@@ -107,10 +140,13 @@
       &:hover{
         transform: scale(1.1);
       }
+      button{
+        color: black;
+        outline: none;
+        border: none;
+      }
       a{
         color: black;
-
-
       }
     }
   }
@@ -123,4 +159,9 @@
   100%{
     height: 5px;
   }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

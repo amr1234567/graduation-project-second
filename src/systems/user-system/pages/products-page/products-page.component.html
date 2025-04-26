@@ -1,1 +1,81 @@
-<p>products-page works!</p>
+<div class="products-container">
+    <!-- Sidebar -->
+    <aside class="categories-sidebar">
+        <h2>Categories</h2>
+        <div class="categories-list">
+            <ul>
+                <li>
+                    <a [class.active]="!selectedCategory()" (click)="selectCategory('')">
+                        All Products
+                    </a>
+                </li>
+                <li *ngFor="let category of categoriesWithCount()">
+                    <a [class.active]="selectedCategory() === category.id" (click)="selectCategory(category.id)">
+                        {{ category.name }}
+                        <span class="count">{{ category.count }}</span>
+                    </a>
+                </li>
+            </ul>
+            <a class="more-link">MORE</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Featured Product Banner -->
+        @if (featuredProduct()) {
+        <div class="featured-banner">
+            <div class="banner-content">
+                <h1>{{ featuredProduct()?.name }}</h1>
+                <p>Performance and design. Taken right to the edge.</p>
+            </div>
+            <div class="banner-image">
+                <img [src]="featuredProduct()?.pictureUrl" [alt]="featuredProduct()?.name">
+            </div>
+        </div>
+        }
+
+        <!-- Products Grid -->
+        @if (isLoading()) {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        } @else if (error()) {
+        <div class="error-message">
+            {{ error() }}
+        </div>
+        } @else {
+        <div class="products-grid">
+            <div class="product-card" *ngFor="let product of filteredProducts">
+                <div class="product-image">
+                    <img [src]="product.pictureUrl" [alt]="product.name">
+                    <div class="product-actions">
+                        <button class="action-btn wishlist" (click)="addToFavorites(product)"
+                            [disabled]="isProcessing(product.productId, 'fav')"
+                            [class.processing]="isProcessing(product.productId, 'fav')">
+                            <i class="far" [class.fa-heart]="!isProcessing(product.productId, 'fav')"
+                                [class.fa-spinner]="isProcessing(product.productId, 'fav')"
+                                [class.fa-spin]="isProcessing(product.productId, 'fav')"></i>
+                            <span class="tooltip">Add to Favorites</span>
+                        </button>
+                        <button class="action-btn cart" (click)="addToBasket(product)"
+                            [disabled]="isProcessing(product.productId, 'cart')"
+                            [class.processing]="isProcessing(product.productId, 'cart')">
+                            <i class="fas" [class.fa-shopping-cart]="!isProcessing(product.productId, 'cart')"
+                                [class.fa-spinner]="isProcessing(product.productId, 'cart')"
+                                [class.fa-spin]="isProcessing(product.productId, 'cart')"></i>
+                            <span class="tooltip">Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <div class="price-actions">
+                        <p class="price">${{ product.price }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </main>
+</div>

@@ -1,1 +1,48 @@
-<p>products-dashboard works!</p>
+<table class="styled-table">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Size</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Colors</th>
+    <th>Rate</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  @for(product of products(); track product.productId){
+    <tr>
+      <td>{{ $index + 1 }}</td>
+      <td><img [src]="product.pictureUrl" [alt]="product.name" class="thumb"/></td>
+      <td>
+        <app-table-cell [value]="product.name" (valueChange)="updateField(product, 'name', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.categoryName" (valueChange)="updateField(product, 'categoryName', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.size" (valueChange)="updateField(product, 'size', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.stockQuantity" (valueChange)="updateField(product, 'stockQuantity', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.price" (valueChange)="updateField(product, 'price', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.colors" (valueChange)="updateField(product, 'colors', $event)"></app-table-cell>
+      </td>
+      <td>
+        <app-table-cell [value]="product.rate" (valueChange)="updateField(product, 'rate', $event)"></app-table-cell>
+      </td>
+      <td>
+        <button class="delete-row" (click)="delete(product)">Delete</button>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>

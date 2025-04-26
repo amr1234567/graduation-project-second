@@ -27,15 +27,15 @@ export default class UserContext {
 
 
   public getRoute(){
-    const user = this.user$();
-    if(!user)
-      return ['auth','login'];
-    switch (user.role){
-      case "User":
-        return ['main' ,'user','main'];
-      case "Admin":
-        return ['main', 'admin', 'dashboard','products'];
+    const role = this.user()?.role.toLowerCase();
+    switch (role) {
+      case 'user':
+        return ['main','user','main'];
+      case 'admin':
+        return ['main','admin','dashboard','products'];
       default:
+        // maybe redirect to a “not authorized” page instead of login,
+        // or clear the stored user and send to login
         return ['auth','login'];
     }
   }

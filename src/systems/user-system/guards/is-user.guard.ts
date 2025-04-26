@@ -3,7 +3,8 @@ import {inject} from '@angular/core';
 import UserContext from '../../../shared/contexts/user.context';
 
 export const isUserGuard: CanActivateFn = (route, state) => {
-  const {user} = inject(UserContext);
+  const _ctx = inject(UserContext);
+  const user = _ctx.user();
   const router = inject(Router);
-  return !!user() && user()?.role.toLowerCase() === 'user' ? true : router.createUrlTree(['auth','login']);
+  return !!user && user?.role.toLowerCase() === 'user' ? true : router.createUrlTree(['auth','login']);
 };

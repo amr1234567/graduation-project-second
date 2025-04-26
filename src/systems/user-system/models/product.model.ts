@@ -12,6 +12,7 @@ export type ProductModel = {
   makeReviews: ReviewModel[];
 }
 
+
 export type ReviewModel = {
   comment: string,
   numberOfPoint: number,

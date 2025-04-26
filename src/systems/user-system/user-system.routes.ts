@@ -1,61 +1,65 @@
-import {Routes} from '@angular/router';
-import {isUserGuard} from './guards/is-user.guard';
-import {isAuthorizedGuard} from '../auth-system/guards/is-authorized.guard';
+import { Routes } from '@angular/router';
+import { isUserGuard } from './guards/is-user.guard';
+import { isAuthorizedGuard } from '../auth-system/guards/is-authorized.guard';
 import isAdminGuard from './guards/is-admin.guard';
-// Remove unused import since you're lazy loading this component
-// import {ProductsDashboardComponent} from './pages/dashboard/products-dashboard/products-dashboard.component';
 
-const userRoutes: Routes = [
+import UserDecoratorLayoutComponent from './user-decorator-layout.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { CartPageComponent } from './pages/cart-page/cart-page.component';
+import { FavoriteProductsPageComponent } from './pages/favorite-products-page/favorite-products-page.component';
+import { ProductDetailsPageComponent } from './pages/product-details-page/product-details-page.component';
+import { ProductsPageComponent } from './pages/products-page/products-page.component';
+
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProductsDashboardComponent } from './pages/dashboard/products-dashboard/products-dashboard.component';
+import { CategoriesDashboardComponent } from './pages/dashboard/categories-dashboard/categories-dashboard.component';
+import { DeliveryMethodsDashboardComponent } from './pages/dashboard/delivery-methods-dashboard/delivery-methods-dashboard.component';
+import { OrdersDashboardComponent } from './pages/dashboard/orders-dashboard/orders-dashboard.component';
+import { ProductDetailsComponent } from './pages/dashboard/product-details/product-details.component';
+import { UpdatingProductComponent } from './pages/dashboard/updating-product/updating-product.component';
+import { AddingProductComponent } from './pages/dashboard/adding-product/adding-product.component';
+
+export const userRoutes: Routes = [
   {
     path: 'main',
-    loadComponent: () => import("./user-decorator-layout.component").then(l => l.default),
+    component: UserDecoratorLayoutComponent,
+    canActivateChild: [isAuthorizedGuard],
     children: [
       {
-        path: "user",
+        path: 'user',
+        canActivateChild: [isUserGuard],
+        children: [
+          { path: '', redirectTo: 'main', pathMatch: 'full' }, // Add this
+          { path: 'main', component: MainPageComponent },
+          { path: 'cart', component: CartPageComponent },
+          { path: 'favorite', component: FavoriteProductsPageComponent },
+          { path: 'product-details/:productId', component: ProductDetailsPageComponent },
+          { path: 'products', component: ProductsPageComponent },
+        ]
+      },
+      {
+        path: 'admin',
+        canActivateChild: [isAdminGuard],
         children: [
           {
-            path: "main",
-            loadComponent: () => import("./pages/main-page/main-page.component")
-              .then(l => l.MainPageComponent),
+            path: 'dashboard',
+            component: DashboardComponent,
+            children: [
+              { path: '', redirectTo: 'products', pathMatch: 'full' }, // Add this
+              { path: 'products', component: ProductsDashboardComponent },
+              { path: 'categories', component: CategoriesDashboardComponent },
+              { path: 'delivery-methods', component: DeliveryMethodsDashboardComponent },
+              { path: 'orders', component: OrdersDashboardComponent },
+            ]
           },
-          {
-            path: 'cart',
-            loadComponent: () => import("./pages/cart-page/cart-page.component")
-              .then(l => l.CartPageComponent),
-          },
-          {
-            path: "favorite",
-            loadComponent: () => import("./pages/favorite-products-page/favorite-products-page.component")
-              .then(l => l.FavoriteProductsPageComponent),
-          },
-          {
-            path: "profile",
-            loadComponent: () => import("./pages/profile-page/profile-page.component")
-              .then(l => l.ProfilePageComponent),
-          },
-          {
-            path: "product-details/:productId",
-            loadComponent: () => import("./pages/product-details-page/product-details-page.component")
-              .then(l => l.ProductDetailsPageComponent),
-          },
-          {
-            path: "products",
-            loadComponent: () => import("./pages/products-page/products-page.component")
-              .then(l => l.ProductsPageComponent),
-          },
-        ],
-        canActivateChild: [isUserGuard]
-      },
-    ],
-    canActivateChild: [isAuthorizedGuard]
+          { path: 'products/:id', component: ProductDetailsComponent },
+          { path: 'products/update/:id', component: UpdatingProductComponent },
+          { path: 'products/add', component: AddingProductComponent },
+        ]
+      }
+    ]
   }
 ];
 
-const adminRoutes: Routes = [
-
-];
-
-// Either export both route arrays
-export { userRoutes, adminRoutes };
-// Or combine them before exporting
-// export default [...userRoutes, ...adminRoutes];
+// Export routes array
+export default userRoutes;

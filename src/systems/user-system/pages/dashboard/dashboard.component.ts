@@ -12,9 +12,4 @@ import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/route
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  private router = inject(Router);
-
-  navigate(route: string) {
-    this.router.navigate([route]);
-  }
 }

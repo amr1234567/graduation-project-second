@@ -1,8 +1,16 @@
 <ul>
-  <li routerLink="products" routerLinkActive>Products</li>
-  <li routerLink="categories" routerLinkActive>Categories</li>
-  <li routerLink="delivery-methods" routerLinkActive>Delivery Methods</li>
-  <li routerLink="orders" routerLinkActive>Orders</li>
+  <a routerLink="products"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }">Products</a>
+  <a routerLink="categories"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }">Categories</a>
+  <a routerLink="delivery-methods"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }">Delivery Methods</a>
+  <a routerLink="orders"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }">Orders</a>
 </ul>
 <main>
   <router-outlet />

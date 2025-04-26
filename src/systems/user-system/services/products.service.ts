@@ -28,6 +28,34 @@ export class ProductsService extends SharedService{
       }
     })
   }
+
+  public deleteProductById(id: string) {
+    return this.sendDeleteRequest<any>(`/${id}`)
+  }
+
+  public updateProduct(updated: ProductModel) {
+    return this.sendPutRequest<any>(`/${updated.productId}`, updated, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public addProductToBasket(productId: string) {
+    return this.sendPostRequest<any>("", {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public addProductToFavorite(productId: string) {
+    return this.sendPostRequest<any>("", {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 }
 
 class ProductsApiRoutes {

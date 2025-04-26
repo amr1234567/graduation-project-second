@@ -38,6 +38,24 @@ export class SharedService {
         return throwError(e);
       }))
   }
+
+  protected sendDeleteRequest<TRes>(route: string, options?: HttpOptions): Observable<TRes> {
+    return this.httpClient.delete<TRes>(`${this.baseUrl()}${route}`, options)
+      .pipe(catchError(e => {
+        this.notificationCtx.addNotification(JSON.stringify(e.message), NotificationTypeEnum.Error)
+        console.log(e);
+        return throwError(e);
+      }))
+  }
+
+  protected sendPutRequest<TRes>(route: string, body: any, options?: HttpOptions): Observable<TRes> {
+    return this.httpClient.put<TRes>(`${this.baseUrl()}${route}`, JSON.stringify(body), options)
+      .pipe(catchError(e => {
+        this.notificationCtx.addNotification(JSON.stringify(e.message), NotificationTypeEnum.Error)
+        console.log(e);
+        return throwError(e);
+      }))
+  }
 }
 
 interface HttpOptions {

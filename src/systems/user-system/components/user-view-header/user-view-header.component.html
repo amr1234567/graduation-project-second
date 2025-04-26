@@ -22,9 +22,22 @@
   </button>
 </div>
 <ul class="personal-icons">
-  @for (link of personalIcons(); track link.value){
-    <li [title]="link.value" [class.active]="link.isActive">
-      <a [routerLink]="link.route" [innerHTML]="sanitize(link.icon)"></a>
+  @for(link of personalIcons(); track $index){
+    <li [class.active]="link.isActive" #profileButton="">
+      <button class="icon-btn"
+              (click)="link.value==='profile page' ? toggleProfileMenu($event) : null"
+              [routerLink]="link.value==='profile page'? null : link.route"
+              [innerHTML]="sanitize(link.icon)"></button>
     </li>
   }
 </ul>
+@if(profileMenuOpen()){
+  <div #profileMenu class="profile-menu">
+    <div class="info">
+      <p><strong>{{ _user?.email }}</strong></p>
+      <p>{{ _user?.role }}</p>
+    </div>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+}
+

@@ -1,0 +1,12 @@
+<div class="editable-cell" (mouseenter)="hover.set(true)" (mouseleave)="hover.set(false)">
+   @if(!editing()){
+     <span>{{ value() }}</span>
+     @if(hover()){
+       <button class="edit-btn" (click)="startEdit($event)">✎</button>
+     }
+   } @else {
+     <input [ngModel]="editValue" (ngModelChange)="editValue = $event" class="edit-input" />
+     <button class="confirm-btn" (click)="confirm()">✔</button>
+     <button class="cancel-btn" (click)="cancel()">✖</button>
+   }
+</div>

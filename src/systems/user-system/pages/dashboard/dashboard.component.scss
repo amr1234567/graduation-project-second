@@ -1,21 +1,26 @@
 :host{
   width: 100%;
-  min-height: 100vh;
+  min-height: 80vh;
   display: flex;
 
   ul{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    //justify-content: center;
+    padding-top: 3rem;
+    margin-right: 1rem;
     gap: 1rem;
     list-style: none;
     background-color: white;
 
-    li{
+    a{
       background-color: #9F8383;
       border-radius: 1rem;
       font-weight: bold;
       transition: 0.15s ease-in-out;
+      text-decoration: none;
+      padding: 0.5rem 2rem;
+      color: white;
 
       &.active{
         background-color: #836060;
@@ -25,5 +30,10 @@
         opacity: 0.7;
       }
     }
+  }
+
+  main{
+    width: 75%;
+    //min-height: 50vh;
   }
 }
