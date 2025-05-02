@@ -1,0 +1,17 @@
+<div class="related-products">
+    <h2>YOU MIGHT ALSO LIKE</h2>
+    <div class="related-products-grid">
+        @for (product of relatedProducts(); track product.productId) {
+        <app-related-product-card [product]="product" (addToCart)="onAddToCart($event)"
+            (addToFavorites)="onAddToFavorites($event)" />
+        }
+    </div>
+    <div class="pagination-controls">
+        <button class="prev-btn" (click)="page.set(page() - 1)" [disabled]="page() === 1">
+            <i class="fa fa-chevron-left"></i>
+        </button>
+        <button class="next-btn" (click)="page.set(page() + 1)">
+            <i class="fa fa-chevron-right"></i>
+        </button>
+    </div>
+</div>

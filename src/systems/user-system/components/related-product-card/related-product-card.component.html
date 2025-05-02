@@ -1,0 +1,13 @@
+<div class="related-product">
+    <div class="related-product-image">
+        <img [src]="product().pictureUrl" [alt]="product().name">
+    </div>
+    <div class="related-product-info">
+        <h3>{{product().name}}</h3>
+        <div class="related-product-price">
+            <span class="current-price">${{product().price.toFixed(2)}}</span>
+            <span class="original-price">${{product().price.toFixed(2)}}</span>
+        </div>
+        <button class="add-to-cart-btn" (click)="addToCart.emit(product())">Add to cart</button>
+    </div>
+</div>

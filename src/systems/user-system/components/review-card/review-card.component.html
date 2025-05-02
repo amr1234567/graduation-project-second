@@ -1,0 +1,20 @@
+<div class="review-card">
+    <div class="review-header">
+        <div class="reviewer-info">
+            <div class="reviewer-details">
+                <h4>User #{{review().appUserId}}</h4>
+                <div class="review-date">{{review().createdAt | date:'mediumDate'}}</div>
+            </div>
+        </div>
+        <div class="review-rating">
+            <div class="stars">
+                @for (star of [1,2,3,4,5]; track $index) {
+                <i class="fa" [ngClass]="star <= review().numberOfPoint ? 'fa-star' : 'fa-star-o'"></i>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="review-content">
+        <p>{{review().comment}}</p>
+    </div>
+</div>

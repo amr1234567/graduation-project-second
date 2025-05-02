@@ -3,11 +3,14 @@ import {SharedService} from '../../../shared/services/shared.service';
 import {Data} from '@angular/router';
 import {ProductModel} from '../models/product.model';
 import {HttpParams} from '@angular/common/http';
+import { BasketModel, FavoriteProductsModel } from '../models/basket.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService extends SharedService{
+
+
   constructor() {
     super(ProductsApiRoutes.BaseRoute)
   }
@@ -22,7 +25,7 @@ export class ProductsService extends SharedService{
   }
 
   public getProductById(id: string){
-    return this.sendGetRequest<ProductModel>(`/${id}`,{
+    return this.sendGetRequest<ProductModel>(`${ProductsApiRoutes.GetProductByIdRoute}/${id}`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -30,19 +33,22 @@ export class ProductsService extends SharedService{
   }
 
   public deleteProductById(id: string) {
-    return this.sendDeleteRequest<any>(`/${id}`)
+    return this.sendDeleteRequest<any>(`${ProductsApiRoutes.DeleteProductByIdRoute}/${id}`)
   }
 
   public updateProduct(updated: ProductModel) {
-    return this.sendPutRequest<any>(`/${updated.productId}`, updated, {
+    return this.sendPutRequest<any>(`${ProductsApiRoutes.UpdateProductRoute}/${updated.productId}`, updated, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
   }
 
-  public addProductToBasket(productId: string) {
-    return this.sendPostRequest<any>("", {}, {
+  public addProductToBasket(productId: string, quantity: number = 1) {
+    return this.sendPostRequest<any>(`${ProductsApiRoutes.AddToBasketRoute}`, {
+      productId,
+      quantity
+    }, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -50,7 +56,42 @@ export class ProductsService extends SharedService{
   }
 
   public addProductToFavorite(productId: string) {
-    return this.sendPostRequest<any>("", {}, {
+    return this.sendPostRequest<any>(`${ProductsApiRoutes.AddToFavRoute}`, { productId }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public removeProductFromFavorite(productId: string) {
+    return this.sendDeleteRequest<any>(`${ProductsApiRoutes.RemoveFromFavRoute}/${productId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public removeProductFromBasket(productId: string, quantity: number = 1) {
+    const httpParams = new HttpParams();
+    httpParams.set("quantity", quantity);
+    return this.sendDeleteRequest<any>(`${ProductsApiRoutes.RemoveFromBasketRoute}/${productId}`, {
+      params: httpParams,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public getCartItems() {
+    return this.sendGetRequest<BasketModel>(`${ProductsApiRoutes.GetBasket}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  public getFavoriteProducts() {
+    return this.sendGetRequest<FavoriteProductsModel>(`${ProductsApiRoutes.GetFavorite}`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -59,9 +100,18 @@ export class ProductsService extends SharedService{
 }
 
 class ProductsApiRoutes {
-  // static readonly BaseRoute: string = 'https://localhost:7151/api/Product';
-  static readonly BaseRoute: string = 'http://ecommercetest2.runasp.net/api/Product';
-  static readonly GetProductsRoute: string = ""
+  // static readonly BaseRoute: string = 'https://localhost:7151/api';
+  static readonly BaseRoute: string = 'http://ecommercetest2.runasp.net/api';
+  static readonly GetProductsRoute: string = "/Product"
+  static readonly GetProductByIdRoute: string = "/Product"
+  static readonly DeleteProductByIdRoute: string = "/Product"
+  static readonly UpdateProductRoute: string = "/Product"
+  static readonly AddToFavRoute: string = "/Favorite/AddItems"
+  static readonly AddToBasketRoute: string = "/Basket/AddItems"
+  static readonly RemoveFromFavRoute: string = "/Favorite/items"
+  static readonly RemoveFromBasketRoute: string = "/Basket/items"
+  static readonly GetBasket: string = "/Basket"
+  static readonly GetFavorite: string = "/Favorite"
 }
 
 type GetProductsQuery = {
@@ -74,11 +124,11 @@ type GetProductsQuery = {
   dateTo: Date | null;
 }
 
-export type paginationModel<T> = {
-  pageSize: number,
-  pageIndex: number,
-  count: number,
-  data: T[]
+export interface paginationModel<T> {
+  data: T[];
+  totalCount: number;
+  pageIndex: number;
+  pageSize: number;
 }
 
 function getParamsFromQuery(query: GetProductsQuery): HttpParams {

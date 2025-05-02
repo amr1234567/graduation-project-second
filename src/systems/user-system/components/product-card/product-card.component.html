@@ -1,0 +1,26 @@
+<div class="cart-item-card">
+    <div class="cart-item-image">
+        <img [src]="cartItem().pictureUrl" alt="product image" />
+    </div>
+    <div class="cart-item-name">
+        {{ cartItem().productName }}
+    </div>
+    <div class="cart-item-unit-price">
+        {{ cartItem().price | currency:'$' }}
+    </div>
+    <div class="cart-item-quantity-controls">
+        <button class="quantity-btn" (click)="decreaseQuantityFn()">-</button>
+        <span class="quantity-value">{{ quantity() }}</span>
+        <button class="quantity-btn" (click)="increaseQuantityFn()">+</button>
+        <ng-container *ngIf="quantity() !== originalQuantity()">
+            <button class="save-btn" (click)="saveQuantityFn()">Save</button>
+            <button class="reset-btn" (click)="resetQuantityFn()">Reset</button>
+        </ng-container>
+    </div>
+    <div class="cart-item-total-price">
+        {{ (cartItem().price * quantity()) | currency:'$' }}
+    </div>
+    <div class="cart-item-remove">
+        <button class="remove-btn" (click)="removeProductFn()">حذف</button>
+    </div>
+</div>

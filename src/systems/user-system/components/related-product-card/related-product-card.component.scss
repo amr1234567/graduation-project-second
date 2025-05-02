@@ -1,0 +1,56 @@
+.related-product {
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+
+    .related-product-image {
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .related-product-info {
+        padding: 15px;
+
+        h3 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .related-product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+
+            .current-price {
+                font-weight: 500;
+                color: #f00;
+            }
+
+            .original-price {
+                text-decoration: line-through;
+                color: #999;
+                font-size: 14px;
+            }
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #f5f5f5;
+            }
+        }
+    }
+}

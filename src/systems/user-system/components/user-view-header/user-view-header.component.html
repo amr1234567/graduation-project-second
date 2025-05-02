@@ -5,7 +5,8 @@
 <ul class="links">
   @for (link of navigationLinks(); track $index){
     <li [class.active]="link.isActive">
-      <a [routerLink]="link.route">{{link.value}}</a>
+      <a [routerLink]="[link.route]" [queryParams]=" link.categoryId !== undefined ? { categoryId: link.categoryId } : {}"
+        [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }">{{link.value}}</a>
     </li>
   }
 </ul>

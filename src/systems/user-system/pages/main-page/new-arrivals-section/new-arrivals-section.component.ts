@@ -40,11 +40,7 @@ export class NewArrivalsSectionComponent implements OnInit {
       this.products.set(d);
     })
     const categoriesConn = this.categoriesServices.getAllCategories().subscribe(d => {
-      this.categories.set([{
-        id: "",
-        name: "All",
-        description: ""
-      }, ...d]);
+      this.categories.set(d);
     })
     this._destroyRef.onDestroy(() => {
       productsConn.unsubscribe();
@@ -53,7 +49,7 @@ export class NewArrivalsSectionComponent implements OnInit {
     });
   }
   products = signal<paginationModel<ProductModel>>({
-    count: 0,
+    totalCount: 0,
     pageSize: 0,
     pageIndex: 1,
     data: []

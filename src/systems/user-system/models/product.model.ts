@@ -10,10 +10,14 @@ export type ProductModel = {
   categoryId: string;
   rate: number;
   makeReviews: ReviewModel[];
+  isInFav: boolean;
+  isInCart: boolean;
+  description: string;
 }
 
 
 export type ReviewModel = {
+  reviewId: string;
   comment: string,
   numberOfPoint: number,
   createdAt: Date,

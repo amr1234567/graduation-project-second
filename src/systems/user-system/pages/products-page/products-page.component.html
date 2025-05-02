@@ -1,81 +1,132 @@
 <div class="products-container">
-    <!-- Sidebar -->
-    <aside class="categories-sidebar">
-        <h2>Categories</h2>
-        <div class="categories-list">
-            <ul>
-                <li>
-                    <a [class.active]="!selectedCategory()" (click)="selectCategory('')">
-                        All Products
-                    </a>
-                </li>
-                <li *ngFor="let category of categoriesWithCount()">
-                    <a [class.active]="selectedCategory() === category.id" (click)="selectCategory(category.id)">
-                        {{ category.name }}
-                        <span class="count">{{ category.count }}</span>
-                    </a>
-                </li>
-            </ul>
-            <a class="more-link">MORE</a>
-        </div>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="categories-sidebar">
+    <h2>Categories</h2>
+    <div class="categories-list">
+      <button [class.active]="!selectedCategory()" (click)="selectCategory('')" class="category-button">
+        {{ 'All Categories' }}
+      </button>
+      <button *ngFor="let category of categories()" [class.active]="category.id === selectedCategory()"
+              (click)="selectCategory(category.id)" class="category-button">
+        {{ category.name }} ({{ category.count }})
+      </button>
+    </div>
+  </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Featured Product Banner -->
-        @if (featuredProduct()) {
-        <div class="featured-banner">
-            <div class="banner-content">
-                <h1>{{ featuredProduct()?.name }}</h1>
-                <p>Performance and design. Taken right to the edge.</p>
-            </div>
-            <div class="banner-image">
-                <img [src]="featuredProduct()?.pictureUrl" [alt]="featuredProduct()?.name">
-            </div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Featured Product Banner -->
+    @if (featuredProduct()) {
+      <div class="featured-banner">
+        <div class="banner-content">
+          <h1>{{ featuredProduct()?.name }}</h1>
+          <p>Performance and design. Taken right to the edge.</p>
         </div>
-        }
+        <div class="banner-image">
+          <img [src]="featuredProduct()?.pictureUrl" [alt]="featuredProduct()?.name">
+        </div>
+      </div>
+    }
 
-        <!-- Products Grid -->
-        @if (isLoading()) {
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-        </div>
-        } @else if (error()) {
-        <div class="error-message">
-            {{ error() }}
-        </div>
-        } @else {
-        <div class="products-grid">
-            <div class="product-card" *ngFor="let product of filteredProducts">
-                <div class="product-image">
-                    <img [src]="product.pictureUrl" [alt]="product.name">
-                    <div class="product-actions">
-                        <button class="action-btn wishlist" (click)="addToFavorites(product)"
-                            [disabled]="isProcessing(product.productId, 'fav')"
-                            [class.processing]="isProcessing(product.productId, 'fav')">
-                            <i class="far" [class.fa-heart]="!isProcessing(product.productId, 'fav')"
-                                [class.fa-spinner]="isProcessing(product.productId, 'fav')"
-                                [class.fa-spin]="isProcessing(product.productId, 'fav')"></i>
-                            <span class="tooltip">Add to Favorites</span>
-                        </button>
-                        <button class="action-btn cart" (click)="addToBasket(product)"
-                            [disabled]="isProcessing(product.productId, 'cart')"
-                            [class.processing]="isProcessing(product.productId, 'cart')">
-                            <i class="fas" [class.fa-shopping-cart]="!isProcessing(product.productId, 'cart')"
-                                [class.fa-spinner]="isProcessing(product.productId, 'cart')"
-                                [class.fa-spin]="isProcessing(product.productId, 'cart')"></i>
-                            <span class="tooltip">Add to Cart</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3>{{ product.name }}</h3>
-                    <div class="price-actions">
-                        <p class="price">${{ product.price }}</p>
-                    </div>
-                </div>
+    <!-- Products Grid -->
+    @if (isLoading()) {
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+    } @else if (error()) {
+      <div class="error-message">
+        {{ error() }}
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of filteredProducts; track product.productId) {
+          <div class="product-card" [routerLink]="['/main/user/product-details', product.productId]">
+            <div class="product-image">
+              <img [attr.src]="product.pictureUrl" [alt]="product.name">
+              <div class="product-actions">
+                @if(product.isInFav){
+                  <button class="action-btn wishlist in-wishlist" (click)="removeFromFavorites(product); $event.stopPropagation()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <path
+                          d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 6H11M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
+                          stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </g>
+                    </svg>
+                    <span class="tooltip">Remove from Fav</span>
+                  </button>
+                } @else {
+                  <button class="action-btn wishlist" (click)="addToFavorites(product); $event.stopPropagation()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <path
+                          d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 5.5H13.5M13.5 5.5H11M13.5 5.5V8M13.5 5.5V3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
+                          stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </g>
+                    </svg>
+                    <span class="tooltip">Add to Fav</span>
+                  </button>
+                }
+                @if (product.isInCart) {
+                  <button class="action-btn cart remove-from-cart" (click)="removeToBasket(product); $event.stopPropagation()">
+                    <svg viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                         class="si-glyph si-glyph-basket-plus" fill="#ffffff">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <title>625</title>
+                        <defs> </defs>
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g transform="translate(0.000000, 1.000000)" fill="#ffffff">
+                            <path
+                              d="M9.927,11.918 C9.887,11.833 9.86,11.741 9.86,11.639 L9.86,7.483 C9.86,7.145 10.146,6.907 10.448,6.907 L10.469,6.907 C10.77,6.907 11.063,7.145 11.063,7.483 L11.063,10.943 L11.965,10.943 L11.965,8.982 L13.258,8.982 L13.422,5.976 L14.188,5.976 C14.588,5.976 14.913,4.756 14.913,4.756 C14.913,4.386 14.589,4.084 14.188,4.084 L12.26,4.084 L11.225,0.447 C11.074,0.13 10.699,0.00199999998 10.387,0.161 L10.315,0.197 C10.005,0.357 9.876,0.743 10.027,1.06 L10.768,4.083 L4.114,4.083 L4.882,1.064 C5.036,0.75 4.909,0.362 4.601,0.199 L4.531,0.163 C4.22,0.000999999981 3.843,0.125 3.689,0.44 L2.616,4.083 L0.726,4.083 C0.326,4.083 0.000999999931,4.385 0.000999999931,4.755 C0.000999999931,4.755 0.325,5.975 0.726,5.975 L1.362,5.975 L1.811,12.652 C1.811,12.652 1.863,13.961 3.924,13.961 L9.928,13.961 L9.928,11.918 L9.927,11.918 Z M11.969,5 L13.031,5 L13.031,6.062 L11.969,6.062 L11.969,5 L11.969,5 Z M3.094,6.031 L1.912,6.031 L1.912,4.906 L3.094,4.906 L3.094,6.031 L3.094,6.031 Z M5.006,11.742 C5.006,12.092 4.755,12.375 4.447,12.375 L4.424,12.375 C4.113,12.375 3.863,12.092 3.863,11.742 L3.863,7.413 C3.863,7.063 4.113,6.781 4.424,6.781 L4.447,6.781 C4.755,6.781 5.006,7.063 5.006,7.413 L5.006,11.742 L5.006,11.742 Z M8.004,11.547 C8.004,11.881 7.774,12.152 7.49,12.152 L7.469,12.152 C7.185,12.152 6.955,11.881 6.955,11.547 L6.955,7.448 C6.955,7.114 7.184,6.844 7.469,6.844 L7.49,6.844 C7.773,6.844 8.004,7.115 8.004,7.448 L8.004,11.547 L8.004,11.547 Z"
+                              class="si-glyph-fill"> </path>
+                            <path
+                              d="M16,12.012 L13.992,12.012 L13.992,10.106 L13.055,10.106 L13.055,12.012 L11.052,12.012 L11.052,12.906 L13.055,12.906 L13.055,14.938 L13.992,14.938 L13.992,12.906 L16,12.906 L16,12.012 Z"
+                              class="si-glyph-fill"> </path>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                    <span class="tooltip">Remove from Cart</span>
+                  </button>
+                }@else {
+                  <button class="action-btn cart" (click)="addToBasket(product); $event.stopPropagation()">
+                    <svg viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                         class="si-glyph si-glyph-basket-remove" fill="#000000">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <title>627</title>
+                        <defs> </defs>
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g transform="translate(0.000000, 1.000000)" fill="#000000">
+                            <rect x="11" y="12" width="4.953" height="1" class="si-glyph-fill"> </rect>
+                            <path
+                              d="M14.244,4.084 L12.316,4.084 L11.281,0.447 C11.13,0.13 10.755,0.00199999998 10.443,0.161 L10.372,0.197 C10.061,0.357 9.932,0.743 10.083,1.06 L10.824,4.083 L4.17,4.083 L4.938,1.064 C5.092,0.75 4.965,0.362 4.657,0.199 L4.587,0.163 C4.276,0.000999999981 3.899,0.125 3.745,0.44 L2.672,4.083 L0.782,4.083 C0.382,4.083 0.057,4.385 0.057,4.755 C0.057,4.755 0.381,5.975 0.782,5.975 L1.418,5.975 L1.867,12.652 C1.867,12.652 1.919,13.961 3.98,13.961 L9.969,13.961 L9.969,11.894 C9.936,11.816 9.916,11.731 9.916,11.639 L9.916,7.483 C9.916,7.145 10.159,6.872 10.461,6.872 L10.482,6.872 C10.783,6.872 11.028,7.145 11.028,7.483 L11.028,10.969 L13.205,10.969 L13.478,5.976 L14.244,5.976 C14.644,5.976 14.969,4.756 14.969,4.756 C14.969,4.386 14.645,4.084 14.244,4.084 L14.244,4.084 Z M3.031,6.031 L1.969,6.031 L1.969,4.969 L3.031,4.969 L3.031,6.031 L3.031,6.031 Z M5.062,11.742 C5.062,12.092 4.811,12.375 4.503,12.375 L4.48,12.375 C4.169,12.375 3.919,12.092 3.919,11.742 L3.919,7.413 C3.919,7.063 4.169,6.781 4.48,6.781 L4.503,6.781 C4.811,6.781 5.062,7.063 5.062,7.413 L5.062,11.742 L5.062,11.742 Z M8.061,11.547 C8.061,11.881 7.817,12.152 7.517,12.152 L7.495,12.152 C7.193,12.152 6.95,11.881 6.95,11.547 L6.95,7.448 C6.95,7.114 7.193,6.844 7.495,6.844 L7.517,6.844 C7.817,6.844 8.061,7.115 8.061,7.448 L8.061,11.547 L8.061,11.547 Z M13.031,6.062 L11.937,6.062 L11.937,4.968 L13.031,4.968 L13.031,6.062 L13.031,6.062 Z"
+                              class="si-glyph-fill"> </path>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                    <span class="tooltip">Add to Cart</span>
+                  </button>
+                }
+              </div>
             </div>
-        </div>
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <div class="price-actions">
+                <p class="price">{{ product.price |currency:'EGP':'symbol'}} </p>
+              </div>
+            </div>
+          </div>
         }
-    </main>
+      </div>
+    }
+  </main>
 </div>

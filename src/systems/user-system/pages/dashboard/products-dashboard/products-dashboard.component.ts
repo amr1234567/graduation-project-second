@@ -6,16 +6,14 @@ import {
   effect,
   computed, OnInit
 } from '@angular/core';
-import { AgGridAngular } from 'ag-grid-angular';
 import { ProductsService } from '../../../services/products.service';
-import type { ColDef } from 'ag-grid-community';
 import { ProductModel } from '../../../models/product.model';
 import {TableCellComponent} from '../table-cell/table-cell.component';
 
 @Component({
   selector: 'app-products-dashboard',
   standalone: true,
-  imports: [AgGridAngular, TableCellComponent],
+  imports: [TableCellComponent],
   templateUrl: './products-dashboard.component.html',
   styleUrl: './products-dashboard.component.scss'
 })
@@ -33,7 +31,7 @@ export class ProductsDashboardComponent implements OnInit{
       .subscribe(d => {
         this.products.set(d.data);
         this.page.set(d.pageIndex);
-        this.count.set(d.count);
+        this.count.set(d.totalCount);
       });
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }

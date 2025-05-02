@@ -1,1 +1,155 @@
-<p>product-details-page works!</p>
+<div class="product-container">
+    <div class="product-gallery">
+        <!-- <div class="thumbnails">
+            <div *ngFor="let image of product.images; let i = index" class="thumbnail"
+                [class.active]="selectedImageIndex === i" (click)="selectImage(i)">
+                <img [src]="image" alt="Product thumbnail">
+            </div>
+        </div> -->
+        <div class="main-image">
+            <img [src]="product()?.pictureUrl" alt="Product main image" />
+        </div>
+    </div>
+
+    <div class="product-info">
+        <h1 class="product-title">{{ product()?.name }}</h1>
+        <div class="product-price">${{ product()?.price?.toFixed(2) }}</div>
+
+        <div class="product-options">
+            <div class="option-group">
+                <label>Size</label>
+                <div class="size-options">
+                    <button [class.selected]="true">
+                        {{ product()?.size }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label>Color</label>
+                <div class="color-options">
+                    <button [style.background-color]="product()?.colors" [class.selected]="true"></button>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label>Quantity</label>
+                <div class="quantity-selector">
+                    <button (click)="decreaseQuantity()">-</button>
+                    <input type="number" [(ngModel)]="quantity" min="1" [max]="product()?.stockQuantity ?? 0" />
+                    <button (click)="increaseQuantity()">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-description">
+            <p>{{ product()?.description }}</p>
+        </div>
+
+        <div class="product-actions">
+            @if(product()?.isInCart){
+            <button class="add-to-basket-btn" [class.remove-from-basket]="product()?.isInCart"
+                (click)="removeFromCart()">
+                <i class="fa" [ngClass]="product()?.isInCart ? 'fa-shopping-basket' : 'fa-shopping-basket'"></i>
+                REMOVE FROM BASKET
+            </button>
+            } @else {
+            <button class="add-to-basket-btn" [class.remove-from-basket]="product()?.isInCart" (click)="addToCart()">
+                <i class="fa" [ngClass]="product()?.isInCart ? 'fa-shopping-basket' : 'fa-shopping-basket'"></i>
+                ADD TO BASKET
+            </button>
+            }
+            @if (product()?.isInFav) {
+            <button class="wishlist-btn" [class.in-wishlist]="product()?.isInFav" (click)="removeFromFav()">
+                <i class="fa" [ngClass]="product()?.isInFav ? 'fa-heart' : 'fa-heart-o'"></i>
+                Remove From Favorite
+            </button>
+            }@else {
+            <button class="wishlist-btn" [class.in-wishlist]="product()?.isInFav" (click)="addToFav()">
+                <i class="fa" [ngClass]="product()?.isInFav ? 'fa-heart' : 'fa-heart-o'"></i>
+                Add To Favorite
+            </button>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="product-tabs">
+    <div class="tabs-header">
+        <button [class.active]="activeTab() === 'description'" (click)="setActiveTab('description')">
+            Description
+        </button>
+        <button [class.active]="activeTab() === 'reviews'" (click)="setActiveTab('reviews')">
+            Reviews(0)
+        </button>
+    </div>
+    <div class="tabs-content">
+        <div *ngIf="activeTab() === 'description'" class="tab-content">
+            <p>
+                A key objective is engaging digital marketing customers and allowing
+                them to interact with the brand through servicing and delivery of
+                digital media. Information is easy to access at a fast rate through the
+                use of digital communications.
+            </p>
+            <p>
+                Users with access to the Internet can use many digital mediums, such as
+                Facebook, YouTube, Forums, and Email etc. Through Digital communications
+                it creates a Multi-communication channel where information can be
+                quickly exchanged around the world by anyone without any regard to whom
+                they are [2]! Social segregation plays no part through social mediums
+                due to lack of face to face communication and information being wide
+                spread instead to a selective audience.
+            </p>
+        </div>
+        <div *ngIf="activeTab() === 'reviews'" class="tab-content">
+            <div class="reviews-header">
+                <h3>Customer Reviews</h3>
+                <button class="add-review-btn" (click)="toggleReviewForm()">
+                    <i class="fa" [ngClass]="showReviewForm() ? 'fa-times' : 'fa-plus'"></i>
+                    {{ showReviewForm() ? 'Cancel' : 'Add Review' }}
+                </button>
+            </div>
+
+            @if (showReviewForm()) {
+            <div class="add-review-form">
+                <div class="rating-circles">
+                    <span class="rating-label">Your Rating:</span>
+                    <div class="circles">
+                        @for (circle of ratingCircles(); track circle.index) {
+                        <button class="rate-btn" [class.active]="circle.active" [class.hover]="circle.onHover"
+                            (click)="setRating(circle.index)" (mouseover)="hoverRate(circle.index)"
+                            (mouseleave)="hoverRate(0)">
+                            {{ circle.index }}
+                        </button>
+                        }
+                    </div>
+                </div>
+                <div class="review-input">
+                    <textarea [(ngModel)]="reviewComment" placeholder="Write your review here..." rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="submit-review-btn" [disabled]="!selectedRating() || !reviewComment"
+                        (click)="submitReview()">
+                        Submit Review
+                    </button>
+                </div>
+            </div>
+            }
+
+            @if (product()) {
+            @for (review of product()?.makeReviews; track review.reviewId){
+            <app-review-card [review]="review" />
+            } @empty {
+            <p class="no-reviews">No reviews yet.</p>
+            } } @else {
+            <app-loading-spinner />
+            }
+        </div>
+    </div>
+</div>
+
+@if (product()) {
+<app-related-products-section [categoryId]="product()!.categoryId" [currentProductId]="product()!.productId" />
+}@else {
+<app-loading-spinner />
+}

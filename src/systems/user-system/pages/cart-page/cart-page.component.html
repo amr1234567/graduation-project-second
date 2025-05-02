@@ -1,1 +1,39 @@
-<p>cart-page works!</p>
+<div class="shopping-cart">
+    <div class="cart-header">
+        <div class="product-col">PRODUCT</div>
+        <div class="price-col">PRICE</div>
+        <div class="qty-col">QTY</div>
+        <div class="unit-price-col">UNIT PRICE</div>
+    </div>
+
+    <div class="cart-divider"></div>
+
+    <div class="cart-items">
+        @for(cartItem of cartItems(); track $index){
+        <app-product-card [cartItem]="cartItem" />
+        }
+    </div>
+
+    <div class="cart-divider"></div>
+
+    <div class="cart-summary">
+        <div class="summary-row">
+            <div class="summary-label">Subtotal</div>
+            <div class="summary-value">${{ cartSummary.subtotal }}</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Shipping fee</div>
+            <div class="summary-value">${{ cartSummary.shippingFee }}</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Coupon</div>
+            <div class="summary-value">{{ cartSummary.coupon || 'No' }}</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+            <div class="summary-label">TOTAL</div>
+            <div class="summary-value">${{ cartSummary.total }}</div>
+        </div>
+        <button class="checkout-btn" (click)="checkout()">Check out</button>
+    </div>
+</div>

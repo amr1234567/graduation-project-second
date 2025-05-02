@@ -1,1 +1,23 @@
-<p>favorite-products-page works!</p>
+<div class="favorites-container">
+    <div class="favorites-banner">
+    </div>
+
+    <div class="favorites-grid">
+        <div class="product-card" *ngFor="let product of favoriteProducts()">
+            <div class="product-image">
+                <img [src]="product.pictureUrl" [alt]="product.productName">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">{{ product.productName }}</h3>
+                <div class="product-price-actions">
+                    <span class="product-price">$ {{ product.price }}</span>
+                    <div class="product-actions">
+                        <button class="action-btn favorite-btn" (click)="toggleFavorite(product)">
+                            <i class="heart-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
