@@ -4,13 +4,18 @@
 </div>
 <ul class="links">
   @for (link of navigationLinks(); track $index){
-    <li [class.active]="link.isActive">
+    @if((userRole == "Admin" && link.ShowInRole == "Admin")||
+    (userRole == "User" && link.ShowInRole == "User") ||
+    (link.ShowInRole == null)){
+    <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: false }">
       <a [routerLink]="[link.route]" [queryParams]=" link.categoryId !== undefined ? { categoryId: link.categoryId } : {}"
-        [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }">{{link.value}}</a>
+        routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">{{link.value}}</a>
     </li>
+    }
   }
 </ul>
-<div class="search-container">
+<div *ngIf="userRole == 'User'" class="search-container">
   <input class="search-input" #searchInput type="text" placeholder="Search">
   <button class="searchBtn" (click)="search(searchInput.value)">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,12 +29,14 @@
 </div>
 <ul class="personal-icons">
   @for(link of personalIcons(); track $index){
-    <li [class.active]="link.isActive" #profileButton="">
-      <button class="icon-btn"
-              (click)="link.value==='profile page' ? toggleProfileMenu($event) : null"
-              [routerLink]="link.value==='profile page'? null : link.route"
-              [innerHTML]="sanitize(link.icon)"></button>
+    @if((userRole == "Admin" && link.ShowInRole == "Admin")||
+    (userRole == "User" && link.ShowInRole == "User") ||
+    (link.ShowInRole == null)){
+    <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: false }" #profileButton="">
+      <button class="icon-btn" (click)="link.value==='profile page' ? toggleProfileMenu($event) : null"
+        [routerLink]="link.value==='profile page'? null : link.route" [innerHTML]="sanitize(link.icon)"></button>
     </li>
+    }
   }
 </ul>
 @if(profileMenuOpen()){

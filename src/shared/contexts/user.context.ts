@@ -30,7 +30,7 @@ export default class UserContext {
     const role = this.user()?.role.toLowerCase();
     switch (role) {
       case 'user':
-        return ['main','user','main'];
+        return ['main', 'main'];
       case 'admin':
         return ['main','admin','dashboard','products'];
       default:

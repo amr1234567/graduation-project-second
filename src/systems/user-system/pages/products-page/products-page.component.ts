@@ -6,7 +6,6 @@ import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
 import { paginationModel } from '../../services/products.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { PaginationComponent } from './pagination/pagination.component';
 import { NotificationContext } from '../../../../shared/contexts/notification.context';
 import { PaginationContext } from '../../../../shared/contexts/pagination.context';
 import { NotificationTypeEnum } from '../../../../shared/models/notification.model';
@@ -28,9 +27,6 @@ export class ProductsPageComponent implements OnInit {
   error = signal<string | null>(null);
   featuredProduct = signal<ProductModel | null>(null);
   processingProduct = signal<{ [key: string]: { fav: boolean, cart: boolean } }>({});
-  pageSize = 20;
-
-  private destroyRef = inject(DestroyRef);
 
   constructor(
     private categoriesService: CategoriesService,
@@ -38,7 +34,8 @@ export class ProductsPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private notCtx: NotificationContext,
-    private paginationService: PaginationContext
+    private paginationService: PaginationContext,
+    private destroyRef: DestroyRef
   ) { }
 
   ngOnInit() {
@@ -49,15 +46,12 @@ export class ProductsPageComponent implements OnInit {
         const categoryId = params['categoryId'];
         const page = params['page'] ? parseInt(params['page']) : 1;
         const query = params["search"] as string;
-        this.paginationService.setPaginationState({
-          currentPage: page,
-          totalPages: 1,
-          onPageChange: (page) => this.onPageChange(page)
-        });
+        const size = params["size"] ? parseInt(params['size']) : 10;
+        console.log(`size = '${size}', and page index = '${page}'`);
         if (categoryId) {
           this.selectedCategory.set(categoryId);
         }
-        this.loadProducts(query);
+        this.loadProducts(query, page, size);
       });
   }
 
@@ -75,13 +69,13 @@ export class ProductsPageComponent implements OnInit {
       });
   }
 
-  private loadProducts(querySearch: string | null = null) {
+  private loadProducts(querySearch: string | null = null, page: number = 1, size: number = 10) {
     this.isLoading.set(true);
     const query = {
       sort: null,
       categoryId: this.selectedCategory(),
-      pageSize: this.pageSize,
-      pageIndex: this.paginationService.currentPage(),
+      pageSize: size,
+      pageIndex: page,
       search: querySearch,
       dateFrom: null,
       dateTo: null
@@ -93,18 +87,19 @@ export class ProductsPageComponent implements OnInit {
         next: (response: paginationModel<ProductModel>) => {
           this.products.set(response.data);
           this.paginationService.setPaginationState({
-            currentPage: this.paginationService.currentPage() || 1,
-            totalPages: Math.ceil(response.totalCount / this.pageSize),
+            currentPage: page,
+            totalPages: Math.ceil(response.count / response.pageSize),
             onPageChange: (page) => this.onPageChange(page)
           });
           this.updateFeaturedProduct();
-          this.isLoading.set(false);
         },
         error: (err) => {
           this.notCtx.addNotification("Failed to load products", NotificationTypeEnum.Error, 3000);
           this.error.set('Failed to load products');
-          this.isLoading.set(false);
           console.error('Error loading products:', err);
+        },
+        complete: () => {
+          this.isLoading.set(false);
         }
       });
   }
@@ -117,7 +112,7 @@ export class ProductsPageComponent implements OnInit {
     }
   }
 
-  selectCategory(categoryId: string) {
+  selectCategory(categoryId: string, size: number = 10) {
     if (categoryId === this.selectedCategory()) return;
 
     this.selectedCategory.set(categoryId);
@@ -130,12 +125,12 @@ export class ProductsPageComponent implements OnInit {
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { categoryId: categoryId, page: 1 },
+      queryParams: { categoryId, page: 1, size },
       queryParamsHandling: 'merge'
     });
   }
 
-  onPageChange(page: number) {
+  onPageChange(page: number, size: number = 10) {
     if (page === this.paginationService.currentPage()) return;
 
     this.paginationService.setPaginationState({
@@ -147,7 +142,7 @@ export class ProductsPageComponent implements OnInit {
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page },
+      queryParams: { page, size },
       queryParamsHandling: 'merge'
     });
   }

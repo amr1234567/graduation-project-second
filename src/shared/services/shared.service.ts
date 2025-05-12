@@ -6,16 +6,12 @@ import {NotificationContext} from '../contexts/notification.context';
 import {BaseApiResponse} from '../models/base-api-response.model';
 import {ApiStatusCode} from '../constants/Api';
 import {NotificationTypeEnum} from '../models/notification.model';
+import { environment } from '../../environments/environment';
 
 export class SharedService {
-  private baseUrl = signal("");
+  private baseUrl = signal(environment.apiUrl);
   private httpClient = inject(HttpClient);
   protected notificationCtx = inject(NotificationContext);
-
-  constructor(baseUrl = "") {
-    this.baseUrl.set(baseUrl)
-  }
-
 
   protected set setBaseUrl(baseUrl: string) {
     this.baseUrl.set(baseUrl);
@@ -28,6 +24,17 @@ export class SharedService {
         console.log(e);
         return throwError(e);
       }))
+  }
+
+  protected sendPostRequestWithForm<TRes>(route: string, form: FormData) {
+    return this.httpClient.post<TRes>(`${this.baseUrl()}${route}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+      .pipe(catchError(e => {
+        this.notificationCtx.addNotification(JSON.stringify(e.message), NotificationTypeEnum.Error)
+        console.log(e);
+        return throwError(e);
+      }));
   }
 
   protected sendGetRequest<TRes>(route: string, options?: HttpOptions): Observable<TRes> {

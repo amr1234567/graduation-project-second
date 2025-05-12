@@ -28,3 +28,11 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
         })
     );
 };
+
+export const stripFormDataContentTypeInterceptor: HttpInterceptorFn = (req, next) => {
+    if (req.body instanceof FormData) {
+        const headers = req.headers.delete('Content-Type');
+        req = req.clone({ headers });
+    }
+    return next(req);
+}

@@ -3,12 +3,12 @@ import {provideRouter, withComponentInputBinding, withRouterConfig} from '@angul
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from '../systems/auth-system/services/token-interceptor.interceptor';
+import { stripFormDataContentTypeInterceptor, tokenInterceptor } from '../systems/auth-system/services/token-interceptor.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withRouterConfig({paramsInheritanceStrategy: "always"})),
-    provideHttpClient(withInterceptors([tokenInterceptor]))
+    provideHttpClient(withInterceptors([tokenInterceptor, stripFormDataContentTypeInterceptor]))
   ]
 };

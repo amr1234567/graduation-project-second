@@ -1,0 +1,18 @@
+<div class="pagination" *ngIf="showPagination" [class.above-footer]="isAboveFooter">
+    <button [disabled]="isFirstPage()" (click)="onPageChange(previosPage)" class="pagination-button">
+        <i class="fa fa-chevron-right"></i>
+        Pre
+    </button>
+    <div class="pages">
+        @for (page of getPages(); track page) {
+        <button [class.active]="isCurrentPage(page)" (click)="onPageChange(page)" class="page-number">
+            {{ page }}
+        </button>
+        }
+    </div>
+    <button [disabled]="isLastPage()" (click)="onPageChange(nextPage)" class="pagination-button">
+        Next
+        <i class="fa fa-chevron-left"></i>
+    </button>
+</div>
+<div #footerObserver></div>

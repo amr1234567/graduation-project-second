@@ -25,12 +25,13 @@ export const userRoutes: Routes = [
     component: UserDecoratorLayoutComponent,
     canActivateChild: [isAuthorizedGuard],
     children: [
+      { path: '', redirectTo: 'main', pathMatch: 'full' }, // Add this
+      { path: 'main', component: MainPageComponent },
       {
         path: 'user',
         canActivateChild: [isUserGuard],
         children: [
-          { path: '', redirectTo: 'main', pathMatch: 'full' }, // Add this
-          { path: 'main', component: MainPageComponent },
+          { path: '', redirectTo: 'products', pathMatch: 'full' }, // Add this
           { path: 'cart', component: CartPageComponent },
           { path: 'favorite', component: FavoriteProductsPageComponent },
           { path: 'product-details/:productId', component: ProductDetailsPageComponent },

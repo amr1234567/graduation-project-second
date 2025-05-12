@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {SharedService} from '../../../shared/services/shared.service';
-import {map, Observable, of, tap} from 'rxjs';
+import { map, tap } from 'rxjs';
 import UserContext from '../../../shared/contexts/user.context';
 import {UserRoleType} from '../../../shared/models/user.model';
 
@@ -9,9 +9,6 @@ import {UserRoleType} from '../../../shared/models/user.model';
 })
 export class AuthService extends SharedService{
   private _userCtx = inject(UserContext);
-  constructor() {
-    super(AuthApiRoutes.BaseRoute);
-  }
 
   public login(email: string, password: string) {
     ///Todo: logic to login
@@ -62,9 +59,9 @@ export class AuthService extends SharedService{
 
 class AuthApiRoutes {
   // static readonly BaseRoute: string = "https://localhost:7151/api/Account";
-  static readonly BaseRoute: string = "http://ecommercetest2.runasp.net/api/Account";
-  static readonly LoginRoute: string = "/Login";
-  static readonly RegisterRoute: string = "/Register";
+  // static readonly BaseRoute: string = "http://ecommercetest2.runasp.net/api/Account";
+  static readonly LoginRoute: string = "/Account/Login";
+  static readonly RegisterRoute: string = "/Account/Register";
 }
 
 export type LoginResponse = {

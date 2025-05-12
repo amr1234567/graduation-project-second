@@ -21,8 +21,8 @@ export class ProductCardComponent {
     originalQuantity = signal(0);
 
     ngOnInit() {
-        this.quantity.set(this.cartItem().quentity);
-        this.originalQuantity.set(this.cartItem().quentity);
+        this.quantity.set(this.cartItem().quantity);
+        this.originalQuantity.set(this.cartItem().quantity);
     }
 
     increaseQuantityFn() {

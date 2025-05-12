@@ -5,6 +5,7 @@ import { CartItem } from '../../models/basket.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationContext } from '../../../../shared/contexts/notification.context';
 import { NotificationTypeEnum } from '../../../../shared/models/notification.model';
+import { PaginationContext } from '../../../../shared/contexts/pagination.context';
 
 @Component({
   selector: 'app-favorite-products-page',
@@ -19,7 +20,9 @@ export class FavoriteProductsPageComponent {
 
   favoriteProducts = signal<CartItem[]>([])
 
-  constructor() { }
+  constructor(private _paginationCtx: PaginationContext) {
+    _paginationCtx.clearPaginationState();
+  }
 
   ngOnInit(): void {
     const conn = this._productServices.getFavoriteProducts().subscribe(v => {

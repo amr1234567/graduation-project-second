@@ -49,7 +49,7 @@ export class NewArrivalsSectionComponent implements OnInit {
     });
   }
   products = signal<paginationModel<ProductModel>>({
-    totalCount: 0,
+    count: 0,
     pageSize: 0,
     pageIndex: 1,
     data: []

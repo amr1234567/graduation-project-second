@@ -1,0 +1,76 @@
+<div class="overlay" *ngIf="isOpen()">
+    <div class="overlay-content">
+        <div class="header">
+            <h2>Checkout</h2>
+            <button class="close-btn" (click)="close()">×</button>
+        </div>
+
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" class="address-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" formControlName="firstName" placeholder="Enter first name">
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" formControlName="lastName" placeholder="Enter last name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="street">Street Address</label>
+                <input type="text" id="street" formControlName="street" placeholder="Enter street name">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" formControlName="city" placeholder="Enter city name">
+            </div>
+
+            <div class="form-group">
+                <label for="Country">Country</label>
+                <input type="text" id="Country" formControlName="Country" placeholder="Enter country name">
+            </div>
+
+            <!-- <div class="form-group">
+                <label for="zipCode">ZIP Code</label>
+                <input type="text" id="zipCode" formControlName="zipCode" placeholder="Enter ZIP code">
+            </div> -->
+
+            <!-- <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" formControlName="phone"
+                    placeholder="Enter phone number (e.g., 01012345678)">
+                <div class="error-message" *ngIf="addressForm.get('phone')?.errors?.['pattern']">
+                    Please enter a valid Egyptian phone number starting with 010, 011, 012, or 015
+                </div>
+                <div class="error-message"
+                    *ngIf="addressForm.get('phone')?.errors?.['minlength'] || addressForm.get('phone')?.errors?.['maxlength']">
+                    Phone number must be exactly 11 digits
+                </div>
+            </div> -->
+
+            <div class="form-group">
+                <label for="deliveryMethod">Delivery Method</label>
+                <select id="deliveryMethod" formControlName="deliveryMethodId"
+                    (change)="onDeliveryMethodChange($event)">
+                    <option value="">Select a delivery method</option>
+                    <option *ngFor="let method of deliveryMethods()" [value]="method.id">
+                        {{method.shortName}} - {{method.deliveryTime}} ({{method.cost | currency}})
+                    </option>
+                </select>
+                <div *ngIf="selectedDeliveryMethod()" class="delivery-method-details">
+                    <p>{{selectedDeliveryMethod()?.description}}</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" (click)="close()">Cancel</button>
+                <button type="submit" [disabled]="addressForm.invalid || isSubmitting()" class="submit-btn">
+                    {{ isSubmitting() ? 'Submitting...' : 'Submit Order' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -9,6 +9,7 @@ import { ReviewCardComponent } from '../../components/review-card/review-card.co
 import { RelatedProductsSectionComponent } from '../../components/related-products-section/related-products-section.component';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 import UserContext from '../../../../shared/contexts/user.context';
+import { PaginationContext } from '../../../../shared/contexts/pagination.context';
 
 interface RatingCircle {
   index: number;
@@ -35,6 +36,13 @@ export class ProductDetailsPageComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
   private _route = inject(ActivatedRoute);
   private _ctx = inject(UserContext);
+
+  /**
+   *
+   */
+  constructor(private _paginationCtx: PaginationContext) {
+    _paginationCtx.clearPaginationState();
+  }
 
   product = signal<ProductModel | null>(null)
   activeTab = signal<"description" | "reviews">("description");

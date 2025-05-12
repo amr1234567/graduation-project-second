@@ -1,12 +1,48 @@
 <div class="editable-cell" (mouseenter)="hover.set(true)" (mouseleave)="hover.set(false)">
-   @if(!editing()){
-     <span>{{ value() }}</span>
-     @if(hover()){
-       <button class="edit-btn" (click)="startEdit($event)">✎</button>
-     }
-   } @else {
-     <input [ngModel]="editValue" (ngModelChange)="editValue = $event" class="edit-input" />
-     <button class="confirm-btn" (click)="confirm()">✔</button>
-     <button class="cancel-btn" (click)="cancel()">✖</button>
-   }
+  @if(!editing()){
+  @if(isArray(value())){
+  <div class="checkbox-list">
+    @for(item of getValueAsArray(); track item){
+    <div class="checkbox-item">
+      <input type="checkbox" [checked]="true" disabled />
+      <span>{{ item }}</span>
+    </div>
+    }
+  </div>
+  @if(hover()){
+  <button class="edit-btn" (click)="startEdit($event)">✎</button>
+  }
+  } @else {
+  <span>{{ value() }}</span>
+  @if(hover()){
+  <button class="edit-btn" (click)="startEdit($event)">✎</button>
+  }
+  }
+  } @else {
+  @if(isCheckboxArray(editValue())){
+  <div class="editable-checkbox-list">
+    @for(item of getEditValueAsCheckboxArray(); track item){
+    <div class="checkbox-item">
+      <input type="checkbox" [(ngModel)]="item.checked" />
+      <input type="text" [(ngModel)]="item.value" class="edit-input" />
+      <button class="remove-btn" (click)="removeItem(item)">✖</button>
+    </div>
+    }
+    <button class="add-btn" (click)="addNewItem()">Add new item +</button>
+    <div class="action-buttons">
+      <button class="confirm-btn" (click)="confirm()">✔</button>
+      <button class="cancel-btn" (click)="cancel()">✖</button>
+    </div>
+  </div>
+  } @else {
+  <div class="simple-edit">
+    <input [type]="typeof value() === 'number' ? 'number' : 'text'" [ngModel]="editValue()"
+      (ngModelChange)="editValue.set($event)" class="edit-input" />
+    <div class="action-buttons">
+      <button class="confirm-btn" (click)="confirm()">✔</button>
+      <button class="cancel-btn" (click)="cancel()">✖</button>
+    </div>
+    </div>
+    }
+  }
 </div>

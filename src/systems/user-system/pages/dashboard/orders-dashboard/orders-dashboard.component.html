@@ -1,1 +1,30 @@
-<p>orders-dashboard works!</p>
+<div class="dashboard-header">
+    <h1>Orders Dashboard</h1>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Delivery Method</th>
+            <th>Order Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(order of orders(); track order.orderId){
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ order.total }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.deliveryMethod }}</td>
+            <td>{{ order.orderCreatedAt | date:'dd/MM/yyyy' }}</td>
+            <td>
+                <button class="delete-row" (click)="delete(order)">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

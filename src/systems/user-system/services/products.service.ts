@@ -2,18 +2,14 @@ import { Injectable } from '@angular/core';
 import {SharedService} from '../../../shared/services/shared.service';
 import {Data} from '@angular/router';
 import {ProductModel} from '../models/product.model';
-import {HttpParams} from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { BasketModel, FavoriteProductsModel } from '../models/basket.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService extends SharedService{
-
-
-  constructor() {
-    super(ProductsApiRoutes.BaseRoute)
-  }
 
   public getAllProducts(query: GetProductsQuery){
     return this.sendGetRequest<paginationModel<ProductModel>>(ProductsApiRoutes.GetProductsRoute,{
@@ -36,8 +32,8 @@ export class ProductsService extends SharedService{
     return this.sendDeleteRequest<any>(`${ProductsApiRoutes.DeleteProductByIdRoute}/${id}`)
   }
 
-  public updateProduct(updated: ProductModel) {
-    return this.sendPutRequest<any>(`${ProductsApiRoutes.UpdateProductRoute}/${updated.productId}`, updated, {
+  public updateProduct(id: string, updated: ProductModelToUpdate) {
+    return this.sendPutRequest<any>(`${ProductsApiRoutes.UpdateProductRoute}/${id}`, updated, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -97,11 +93,15 @@ export class ProductsService extends SharedService{
       }
     })
   }
+
+  public createProduct(productData: FormData): Observable<any> {
+    return this.sendPostRequestWithForm(ProductsApiRoutes.CreateProductRoute, productData);
+  }
 }
 
 class ProductsApiRoutes {
-  // static readonly BaseRoute: string = 'https://localhost:7151/api';
-  static readonly BaseRoute: string = 'http://ecommercetest2.runasp.net/api';
+  // static readonly BaseRoute: string = 'http://ecommercetest2.runasp.net/api';
+  static readonly CreateProductsRoute: string = "/Product"
   static readonly GetProductsRoute: string = "/Product"
   static readonly GetProductByIdRoute: string = "/Product"
   static readonly DeleteProductByIdRoute: string = "/Product"
@@ -112,6 +112,7 @@ class ProductsApiRoutes {
   static readonly RemoveFromBasketRoute: string = "/Basket/items"
   static readonly GetBasket: string = "/Basket"
   static readonly GetFavorite: string = "/Favorite"
+  static readonly CreateProductRoute: string = "/Product"
 }
 
 type GetProductsQuery = {
@@ -126,9 +127,21 @@ type GetProductsQuery = {
 
 export interface paginationModel<T> {
   data: T[];
-  totalCount: number;
+  count: number;
   pageIndex: number;
   pageSize: number;
+}
+
+
+export interface ProductModelToUpdate {
+  name?: string;
+  description?: string;
+  pictureUrl?: string;
+  size?: string;
+  colors?: string;
+  stockQuantity?: number;
+  price?: number;
+  categoryId?: string;
 }
 
 function getParamsFromQuery(query: GetProductsQuery): HttpParams {
@@ -138,5 +151,16 @@ function getParamsFromQuery(query: GetProductsQuery): HttpParams {
       const value = v instanceof Date ? v.toISOString() : String(v);
       return params.set(key, value);
     }, new HttpParams());
+}
+
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  sizes: string[];
+  colors: string[];
+  stockQuantity: number;
+  price: number;
+  categoryId: string;
+  picture: File;
 }
 

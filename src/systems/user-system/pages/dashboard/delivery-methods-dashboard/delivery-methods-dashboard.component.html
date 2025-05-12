@@ -1,1 +1,64 @@
-<p>delivery-methods-dashboard works!</p>
+<div class="dashboard-header">
+    <h1>Delivery Methods Dashboard</h1>
+    <button class="add-btn" (click)="showAddForm()">+ Add Delivery Method</button>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Short Name</th>
+            <th>Description</th>
+            <th>Delivery Time</th>
+            <th>Cost</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(isAdding()){
+        <tr class="add-form-row">
+            <td></td>
+            <td>
+                <input type="text" [(ngModel)]="newMethod.shortName" placeholder="Short Name">
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="newMethod.description" placeholder="Description">
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="newMethod.deliveryTime" placeholder="Delivery Time">
+            </td>
+            <td>
+                <input type="number" [(ngModel)]="newMethod.cost" placeholder="Cost">
+            </td>
+            <td>
+                <button class="create-btn" (click)="createMethod()">Create</button>
+                <button class="cancel-btn" (click)="cancelAdd()">Cancel</button>
+            </td>
+        </tr>
+        }
+        @for(method of deliveryMethods(); track method.id){
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>
+                <app-table-cell [value]="method.shortName"
+                    (valueChange)="updateField(method, 'shortName', $event)"></app-table-cell>
+            </td>
+            <td>
+                <app-table-cell [value]="method.description"
+                    (valueChange)="updateField(method, 'description', $event)"></app-table-cell>
+            </td>
+            <td>
+                <app-table-cell [value]="method.deliveryTime"
+                    (valueChange)="updateField(method, 'deliveryTime', $event)"></app-table-cell>
+            </td>
+            <td>
+                <app-table-cell [value]="method.cost"
+                    (valueChange)="updateField(method, 'cost', $event)"></app-table-cell>
+            </td>
+            <td>
+                <button class="delete-row" (click)="delete(method)">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

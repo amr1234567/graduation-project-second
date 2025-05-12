@@ -4,7 +4,7 @@ export interface CartItem {
     pictureUrl: string;
     price: number;
     category: string;
-    quentity: number;
+    quantity: number;
     isInCart: boolean;
 }
 

@@ -29,13 +29,13 @@ export class NotificationComponent {
   getHeader(type: NotificationTypeEnum) {
     switch (type){
       case NotificationTypeEnum.Error:
-        return "خطأ";
+        return NotificationTypeEnum.Error.toString();
       case NotificationTypeEnum.Success:
-        return "نجاح";
+        return NotificationTypeEnum.Success.toString();
       case NotificationTypeEnum.Warning:
-        return "انتبه";
+        return NotificationTypeEnum.Warning.toString();
       case NotificationTypeEnum.Alert:
-        return "تحذير";
+        return NotificationTypeEnum.Alert.toString();
     }
   }
 }

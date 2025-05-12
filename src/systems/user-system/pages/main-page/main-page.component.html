@@ -13,6 +13,118 @@
   <section class="new-arrivals">
     <app-new-arrivals-section />
   </section>
+  <section>
+    <div class="promotional-container">
+      <!-- Collection Cards -->
+      <div class="collection-cards">
+        <div *ngFor="let card of promotionCards; let i = index" class="collection-card"
+          [style.background-color]="card.backgroundColor">
+          <div class="card-content">
+            <h2 class="card-title">{{ card.title }}</h2>
+            <h3 class="card-subtitle">{{ card.subtitle }}</h3>
+            <p class="card-discount">{{ card.discount }}</p>
+            <button class="shop-now-btn">
+              {{ card.buttonText }}
+            </button>
+          </div>
+          <div class="card-image">
+            <img [src]="card.imageUrl" [alt]="card.subtitle + ' collection image'">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Sale Banner -->
+      <div class="sale-banner">
+        <div class="banner-content">
+          <h2 class="banner-title">{{ saleBanner.title }}</h2>
+          <div class="sale-tag">
+            <span class="sale-text">{{ saleBanner.saleText }}</span>
+            <span class="sale-dates">{{ saleBanner.dateRange }}</span>
+          </div>
+          <button class="shop-now-btn banner-btn">
+            {{ saleBanner.buttonText }}
+          </button>
+        </div>
+        <div class="banner-images">
+          <img [src]="saleBanner.womenImageUrl" alt="Women fashion" class="women-image">
+          <img [src]="saleBanner.menImageUrl" alt="Men fashion" class="men-image">
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="brands-section">
+    <div class="top-brands-container">
+      <div class="top-brands-content">
+        <h2 class="brands-title">Top Brands Deal</h2>
+        <p class="brands-subtitle">
+          Up To <span class="highlight">{{ discountPercentage }}%</span> off on brands
+        </p>
+  
+        <div class="brands-logo-container">
+          <div *ngFor="let brand of brands" class="brand-logo-wrapper">
+            <div class="brand-logo">
+              <img [src]="brand.logoUrl" [alt]="brand.name + ' logo'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="subscription-section">
+    <div class="newsletter-container">
+      <div class="newsletter-content">
+        <!-- Envelope Icon -->
+        <div class="envelope-icon">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="15" width="40" height="30" rx="2" fill="#D8D8FF" />
+            <path d="M10 20L30 35L50 20" stroke="#8080FF" stroke-width="2" />
+            <!-- Notification Badge -->
+            <circle cx="45" cy="15" r="10" fill="#FF6BC1" />
+            <path d="M45 11V19M45 21V21.01" stroke="white" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+  
+        <!-- Newsletter Text -->
+        <h2 class="newsletter-title">Subscribe Newsletter</h2>
+        <p class="newsletter-subtitle">Subscribe to our email and get updates right in your inbox</p>
+  
+        <!-- Subscription Form -->
+        <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()" class="subscription-form">
+          <div class="form-group">
+            <input type="email" formControlName="email" placeholder="Enter Your Email" class="email-input"
+              [class.invalid]="isSubmitted && emailControl?.invalid">
+            <button type="submit" class="submit-btn" [disabled]="isSubmitted && !subscriptionForm.valid">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="#555555" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+  
+          <!-- Error Message -->
+          <div *ngIf="isSubmitted && emailControl?.invalid" class="error-message">
+            {{ errorMessage }}
+          </div>
+  
+          <!-- Success Message -->
+          <div *ngIf="isSuccess" class="success-message">
+            Thank you for subscribing!
+          </div>
+        </form>
+  
+        <!-- Social Media Links -->
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-link"
+            [attr.aria-label]="social.name">
+            <i [class]="social.icon"></i>
+          </a>
+        </div>
+      </div>
+  
+      <!-- Bottom Divider -->
+      <div class="bottom-divider"></div>
+    </div>
+  </section>
 </main>
 <footer>
 

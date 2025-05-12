@@ -3,10 +3,10 @@ export type ProductModel = {
   productId: string,
   name: string,
   pictureUrl: string,
-  size: string,
+  sizes: string[],
   stockQuantity: number,
   price: number,
-  colors: string,
+  colors: string[],
   categoryId: string;
   rate: number;
   makeReviews: ReviewModel[];

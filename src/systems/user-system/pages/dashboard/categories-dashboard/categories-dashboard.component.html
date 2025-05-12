@@ -1,1 +1,54 @@
-<p>categories-dashboard works!</p>
+<div class="dashboard-header">
+    <h1>Categories Dashboard</h1>
+    <button class="add-btn" (click)="showAddForm()">+ Add Category</button>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Products Count</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(isAdding()){
+        <tr class="add-form-row">
+            <td></td>
+            <td>
+                <input type="text" [(ngModel)]="newCategory.name" placeholder="Category Name">
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="newCategory.description" placeholder="Category Description">
+            </td>
+            <td>0</td>
+            <td>
+                <button class="create-btn" (click)="createCategory()">Create</button>
+                <button class="cancel-btn" (click)="cancelAdd()">Cancel</button>
+            </td>
+        </tr>
+        }
+        @for(category of categories(); track category.id){
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>
+                <app-table-cell [value]="category.name"
+                    (valueChange)="updateField(category, 'name', $event)"></app-table-cell>
+            </td>
+            <td>
+                <app-table-cell [value]="category.description"
+                    (valueChange)="updateField(category, 'description', $event)"></app-table-cell>
+            </td>
+            <td>
+                <app-table-cell [value]="category.count"
+                    (valueChange)="updateField(category, 'count', $event)"></app-table-cell>
+            </td>
+            <td>
+                <button class="delete-row" (click)="delete(category)">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

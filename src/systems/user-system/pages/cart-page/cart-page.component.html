@@ -1,39 +1,63 @@
-<div class="shopping-cart">
-    <div class="cart-header">
-        <div class="product-col">PRODUCT</div>
-        <div class="price-col">PRICE</div>
-        <div class="qty-col">QTY</div>
-        <div class="unit-price-col">UNIT PRICE</div>
+<div class="cart-container">
+    <table class="cart-table" *ngIf="cartItems().length > 0">
+        <thead>
+            <tr>
+                <th>PRODUCT</th>
+                <th>PRICE</th>
+                <th>QTY</th>
+                <th>UNIT PRICE</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of cartItems(); let i = index">
+                <td class="product-info">
+                    <img [src]="item.pictureUrl" alt="{{item.productName}}" class="product-img">
+                    <span>{{item.productName}}</span>
+                </td>
+                <td>${{item.price.toFixed(2)}}</td>
+                <td>
+                    <div class="quantity-controls">
+                        <button (click)="editQuantity(i, item.editedQuantity - 1)"
+                            [disabled]="item.editedQuantity <= 1">-</button>
+                        <span class="quantity-display">{{ item.editedQuantity }}</span>
+                        <button (click)="editQuantity(i, item.editedQuantity + 1)">+</button>
+                    </div>
+                    <div class="edit-actions" *ngIf="item.isEditing">
+                        <button class="save-btn" (click)="saveQuantity(i)">Save</button>
+                        <button class="reset-btn" (click)="resetQuantity(i)">Reset</button>
+                    </div>
+                    </td>
+                    <td>${{item.unitPrice.toFixed(2)}}</td>
+                    <td><button class="delete-btn" (click)="deleteItem(i)">🗑️</button></td>
+                    </tr>
+                    </tbody>
+                    </table>
+
+    <div class="empty-cart" *ngIf="cartItems().length === 0">
+        <p>The Basket is <em><b>empty</b></em></p>
     </div>
 
-    <div class="cart-divider"></div>
-
-    <div class="cart-items">
-        @for(cartItem of cartItems(); track $index){
-        <app-product-card [cartItem]="cartItem" />
-        }
+    <div class="cart-summary" *ngIf="cartItems().length > 0">
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${{ cartSummary().subtotal.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+            <span>Shipping fee</span>
+            <span>${{ cartSummary().shippingFee.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+            <span>Coupon</span>
+            <span>No</span>
+        </div>
+        <div class="summary-row total">
+            <span>TOTAL</span>
+            <span>${{ cartSummary().total.toFixed(2) }}</span>
+        </div>
+        <button class="checkout-btn" (click)="checkout()">
+            Check out
+        </button>
     </div>
-
-    <div class="cart-divider"></div>
-
-    <div class="cart-summary">
-        <div class="summary-row">
-            <div class="summary-label">Subtotal</div>
-            <div class="summary-value">${{ cartSummary.subtotal }}</div>
-        </div>
-        <div class="summary-row">
-            <div class="summary-label">Shipping fee</div>
-            <div class="summary-value">${{ cartSummary.shippingFee }}</div>
-        </div>
-        <div class="summary-row">
-            <div class="summary-label">Coupon</div>
-            <div class="summary-value">{{ cartSummary.coupon || 'No' }}</div>
-        </div>
-        <div class="summary-divider"></div>
-        <div class="summary-row total-row">
-            <div class="summary-label">TOTAL</div>
-            <div class="summary-value">${{ cartSummary.total }}</div>
-        </div>
-        <button class="checkout-btn" (click)="checkout()">Check out</button>
-    </div>
+    <app-checkout-overlay #checkoutOverlay (onSuccess)="orderCreated()"></app-checkout-overlay>
 </div>

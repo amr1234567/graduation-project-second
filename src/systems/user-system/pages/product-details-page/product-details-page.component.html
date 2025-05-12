@@ -20,7 +20,7 @@
                 <label>Size</label>
                 <div class="size-options">
                     <button [class.selected]="true">
-                        {{ product()?.size }}
+                        {{ product()?.sizes?.join(" - ") }}
                     </button>
                 </div>
             </div>
