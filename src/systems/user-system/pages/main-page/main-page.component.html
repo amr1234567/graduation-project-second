@@ -15,7 +15,7 @@
   </section>
   <section>
     <div class="promotional-container">
-      <!-- Collection Cards -->
+      <!-- Collection Cards with Real Data -->
       <div class="collection-cards">
         <div *ngFor="let card of promotionCards; let i = index" class="collection-card"
           [style.background-color]="card.backgroundColor">
@@ -23,18 +23,17 @@
             <h2 class="card-title">{{ card.title }}</h2>
             <h3 class="card-subtitle">{{ card.subtitle }}</h3>
             <p class="card-discount">{{ card.discount }}</p>
-            <button class="shop-now-btn">
+            <button class="shop-now-btn" (click)="navigateToCategory(card.categoryId)">
               {{ card.buttonText }}
             </button>
           </div>
-          <div class="card-image">
-            <img [src]="card.imageUrl" [alt]="card.subtitle + ' collection image'">
+          <div class="card-image" *ngIf="card.products.length > 0">
+            <img [src]="card.products[0].pictureUrl" [alt]="card.products[0].name" class="product-image">
           </div>
         </div>
       </div>
-  
-      <!-- Sale Banner -->
-      <div class="sale-banner">
+      <!-- Sale Banner with Real Products -->
+      <div class="sale-banner" *ngIf="saleBanner.products.length > 0">
         <div class="banner-content">
           <h2 class="banner-title">{{ saleBanner.title }}</h2>
           <div class="sale-tag">
@@ -46,30 +45,15 @@
           </button>
         </div>
         <div class="banner-images">
-          <img [src]="saleBanner.womenImageUrl" alt="Women fashion" class="women-image">
-          <img [src]="saleBanner.menImageUrl" alt="Men fashion" class="men-image">
+          <img *ngIf="saleBanner.products[0]" [src]="saleBanner.products[0].pictureUrl" [alt]="saleBanner.products[0].name"
+            class="women-image">
+          <img *ngIf="saleBanner.products[1]" [src]="saleBanner.products[1].pictureUrl" [alt]="saleBanner.products[1].name"
+            class="men-image">
         </div>
       </div>
     </div>
   </section>
-  <section class="brands-section">
-    <div class="top-brands-container">
-      <div class="top-brands-content">
-        <h2 class="brands-title">Top Brands Deal</h2>
-        <p class="brands-subtitle">
-          Up To <span class="highlight">{{ discountPercentage }}%</span> off on brands
-        </p>
-  
-        <div class="brands-logo-container">
-          <div *ngFor="let brand of brands" class="brand-logo-wrapper">
-            <div class="brand-logo">
-              <img [src]="brand.logoUrl" [alt]="brand.name + ' logo'">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Brands section removed as requested -->
   <section class="subscription-section">
     <div class="newsletter-container">
       <div class="newsletter-content">
@@ -83,11 +67,11 @@
             <path d="M45 11V19M45 21V21.01" stroke="white" stroke-width="2" stroke-linecap="round" />
           </svg>
         </div>
-  
+
         <!-- Newsletter Text -->
         <h2 class="newsletter-title">Subscribe Newsletter</h2>
         <p class="newsletter-subtitle">Subscribe to our email and get updates right in your inbox</p>
-  
+
         <!-- Subscription Form -->
         <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()" class="subscription-form">
           <div class="form-group">
@@ -100,18 +84,18 @@
               </svg>
             </button>
           </div>
-  
+
           <!-- Error Message -->
           <div *ngIf="isSubmitted && emailControl?.invalid" class="error-message">
             {{ errorMessage }}
           </div>
-  
+
           <!-- Success Message -->
           <div *ngIf="isSuccess" class="success-message">
             Thank you for subscribing!
           </div>
         </form>
-  
+
         <!-- Social Media Links -->
         <div class="social-links">
           <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-link"
@@ -120,7 +104,7 @@
           </a>
         </div>
       </div>
-  
+
       <!-- Bottom Divider -->
       <div class="bottom-divider"></div>
     </div>

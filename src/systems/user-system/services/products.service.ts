@@ -116,13 +116,13 @@ class ProductsApiRoutes {
 }
 
 type GetProductsQuery = {
-  sort: string | null;
-  categoryId: string | null;
-  pageSize: number | null;
-  pageIndex: number | null;
-  search: string | null;
-  dateFrom: Date | null;
-  dateTo: Date | null;
+  sort?: string | null;
+  categoryId?: string | null;
+  pageSize?: number | null;
+  pageIndex?: number | null;
+  search?: string | null;
+  dateFrom?: Date | null;
+  dateTo?: Date | null;
 }
 
 export interface paginationModel<T> {
