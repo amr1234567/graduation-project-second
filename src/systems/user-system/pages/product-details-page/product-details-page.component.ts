@@ -73,6 +73,7 @@ export class ProductDetailsPageComponent implements OnInit {
       const productId = d.get("productId") as string;
       return this._productServices.getProductById(productId);
     })).subscribe(d => {
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // <-- scroll to top
       this.product.set(d);
     })
     this._destroyRef.onDestroy(() => conn.unsubscribe());

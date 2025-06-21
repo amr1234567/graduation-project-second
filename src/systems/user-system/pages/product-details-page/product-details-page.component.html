@@ -19,8 +19,8 @@
             <div class="option-group">
                 <label>Size</label>
                 <div class="size-options">
-                    <button [class.selected]="true">
-                        {{ product()?.sizes?.join(" - ") }}
+                    <button *ngFor="let size of product()?.sizes; let i = index">
+                        {{size}}
                     </button>
                 </div>
             </div>
@@ -28,7 +28,8 @@
             <div class="option-group">
                 <label>Color</label>
                 <div class="color-options">
-                    <button [style.background-color]="product()?.colors" [class.selected]="true"></button>
+                    <button *ngFor="let color of product()?.colors; let i = index" [ngStyle]="{ 'background-color': color }"
+                        class="color-button"></button>
                 </div>
             </div>
 
@@ -149,7 +150,7 @@
 </div>
 
 @if (product()) {
-<app-related-products-section [categoryId]="product()!.categoryId" [currentProductId]="product()!.productId" />
+<app-related-products-section [categoryId]="product()?.categoryId ?? ''" [currentProductId]="product()!.productId" />
 }@else {
 <app-loading-spinner />
 }

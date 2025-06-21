@@ -1,6 +1,8 @@
 .related-product {
     border: 1px solid #e0e0e0;
     transition: transform 0.3s ease;
+    height: 100%;
+    cursor: pointer;
 
     &:hover {
         transform: translateY(-5px);

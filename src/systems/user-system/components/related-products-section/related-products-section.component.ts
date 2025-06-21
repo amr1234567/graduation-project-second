@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { ProductModel } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../services/products.service';
@@ -11,7 +11,7 @@ import { RelatedProductCardComponent } from '../related-product-card/related-pro
     templateUrl: './related-products-section.component.html',
     styleUrl: './related-products-section.component.scss'
 })
-export class RelatedProductsSectionComponent {
+export class RelatedProductsSectionComponent implements OnInit {
     private _productsService = inject(ProductsService);
     private _destroyRef = inject(DestroyRef);
 
@@ -22,7 +22,11 @@ export class RelatedProductsSectionComponent {
     page = signal(1);
     pageSize = 4;
 
+
     constructor() {
+
+    }
+    ngOnInit(): void {
         this.loadRelatedProducts();
     }
 
